@@ -14,7 +14,7 @@ creditsRaw=
 (LTRIM
 icons8    -  Icon - https://icons8.com/icon/Ou81cXLcsZzX/potted-plant"
 Gewerd Strauss   -		 main script
-anonymous1184   -       Ini.ahk, License        -       https://gist.github.com/anonymous1184/737749e83ade98c84cf619aabf66b063,https://gist.github.com/anonymous1184/737749e83ade98c84cf619aabf66b063?permalink_comment_id=4525104#gistcomment-4525104
+anonymous1184   -       Ini.ahk, License (waiting for explicit file to be added)        -       https://gist.github.com/anonymous1184/737749e83ade98c84cf619aabf66b063,https://gist.github.com/anonymous1184/737749e83ade98c84cf619aabf66b063?permalink_comment_id=4525104#gistcomment-4525104
 author2,author3   -		 snippetName1		   		  			-	URL2,URL3
 Gewerd Strauss      -   partial, self-written subset of ScriptObj						    - https://github.com/Gewerd-Strauss/ScriptObj/blob/master/ScriptObj.ahk
 Base64PNG_to_HICON  - SKAN, regarding licensing             -   https://www.autohotkey.com/boards/viewtopic.php?f=6&t=36636, https://www.autohotkey.com/board/topic/75906-about-my-scripts-and-snippets/
