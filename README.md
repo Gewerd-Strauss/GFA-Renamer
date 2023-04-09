@@ -49,3 +49,6 @@ To prevent this, create a copy of `DSC10113` - it is important that you copy the
 Because the script will read images in the folder based on their name, this method ensures the gap is filled appropriately.
 
 This repository contains a sample set in the folder `assets\Image Test Files`. It contains the raw images, as well as the resulting output in the subfolder `GFAR_WD`.
+
+
+
