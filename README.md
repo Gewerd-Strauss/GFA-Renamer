@@ -25,25 +25,25 @@ In this case, all groups have seven images, but the G14-Group only has six. Thus
 
 | Number | Filename        | plant label                         |
 | ------ | --------------- | ----------------------------------- |
-| 1      | DSC10111        | `G14D1`                             |
-| 2      | DSC10112        | `G14D2`                             |
-| 3      | DSC10113        | `G14D3`                             |
-| 4      | DSC10114        | `G14D5`                             |
-| 5      | DSC10115        | `G14D6`                             |
-| 6      | DSC10116        | `G14D7`                             |
+| 1      | DSC10111.JPG        | `G14D1`                             |
+| 2      | DSC10112.JPG        | `G14D2`                             |
+| 3      | DSC10113.JPG        | `G14D3`                             |
+| 4      | DSC10114.JPG        | `G14D5`                             |
+| 5      | DSC10115.JPG        | `G14D6`                             |
+| 6      | DSC10116.JPG        | `G14D7`                             |
 
 In this example, `DSC10111-DSC10113` are `G14D1-G14D3`,and `DSC10114-DSC10116` are `G14D5-G14D7`. Thus, the image for `G14D5` is missing. If you just run the program, you would falsely rename all files beyond `DSC10113` because there would be a frame shift.  
 To prevent this, create a copy of `DSC10113` - it is important that you copy the image of the pot _immediately before the one that is missing_:
 
 | Number | Filename        | plant label                         |
 | ------ | --------------- | ----------------------------------- |
-| 1      | DSC10111        | `G14D1`                             |
-| 2      | DSC10112        | `G14D2`                             |
-| 3      | DSC10113        | `G14D3`                             |
-| 4      | DSC10113 - Copy | `Placeholder for the missing G14D4` |
-| 5      | DSC10114        | `G14D5`                             |
-| 6      | DSC10115        | `G14D6`                             |
-| 7      | DSC10116        | `G14D7`                             |
+| 1      | DSC10111.JPG        | `G14D1`                             |
+| 2      | DSC10112.JPG        | `G14D2`                             |
+| 3      | DSC10113.JPG        | `G14D3`                             |
+| 4      | DSC10113 - Copy.JPG | `Placeholder for the missing G14D4` |
+| 5      | DSC10114.JPG        | `G14D5`                             |
+| 6      | DSC10115.JPG        | `G14D6`                             |
+| 7      | DSC10116.JPG        | `G14D7`                             |
 
 
 Because the script will read images in the folder based on their name, this method ensures the gap is filled appropriately.
