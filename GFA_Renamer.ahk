@@ -143,11 +143,11 @@ GFARSubmit() {
 
     ttip(repeatElementIofarrayNKtimes())
     TrueNumberOfFiles:=0
-    Loop, Files, % Folder "\*.JPG", F
+    Loop, Files, % Folder "\*." script.config.Config.filetype, F
         TrueNumberOfFiles++
     str:="Number of Images that would be renamed given the settings provided: "  Arr.Count() "`nFound number of images: " TrueNumberOfFiles "`n"
     Files:=str
-    Loop, Files, % Folder "\*.JPG", F
+    Loop, Files, % Folder "\*." script.config.Config.filetype, F
     {
         compareTimestamp(A_LoopFileFullPath)
         Files.= A_LoopFileFullPath " - " Arr[A_Index] "`n"
@@ -157,7 +157,7 @@ GFARSubmit() {
     MsgBox 0x40034, % script.name " - Confirm",% "Below you can see the set of images changed.`n" Files "`nDo you want to proceed?"
 
     IfMsgBox Yes, {
-        Loop, Files, % Folder "\*.JPG", F 
+        Loop, Files, % Folder "\*." script.config.Config.filetype, F
         {
             scriptWorkingDir:=renameFile(A_LoopFileFullPath,Arr[A_Index],true,A_Index,TrueNumberOfFiles)
             writeFile(scriptWorkingDir "\gfa_renamer_log.txt",Files, "UTF-8-RAW","w",true)
