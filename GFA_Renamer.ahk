@@ -150,11 +150,12 @@ GFARSubmit() {
     Loop, Files, % Folder "\*." script.config.Config.filetype, F
     {
         compareTimestamp(A_LoopFileFullPath)
-        Files.= A_LoopFileFullPath " - " Arr[A_Index] "`n"
+        if (A_Index<41)
+            Files.= A_LoopFileFullPath " - " Arr[A_Index] "`n"
     }
     Clipboard:=Files
     Gui +OwnDialogs
-    MsgBox 0x40034, % script.name " - Confirm",% "Below you can see the set of images changed.`n" Files "`nDo you want to proceed?"
+    MsgBox 0x40034, % script.name " - Confirm",% "Below you can see the first 40 images changed as a sample.`n" Files "`nDo you want to proceed?"
 
     IfMsgBox Yes, {
         Loop, Files, % Folder "\*." script.config.Config.filetype, F
