@@ -150,13 +150,13 @@ class script {
                 {
                     if (credits.Count()>0)
                     {
-                        CreditsAssembly:="credits for used code:`n"
+                        CreditsAssembly:="credits for used code:<br>`n"
                         for Author,v in credits
                         {
                             if (k="")
                                 continue
                             if (strsplit(v,"|").2="")
-                                CreditsAssembly.="<p>" Author " - " strsplit(v,"|").1 "`n"
+                                CreditsAssembly.="<p>" Author " - " strsplit(v,"|").1 "`n`n"
                             else
                             {
                                 Name:=strsplit(v,"|").1
@@ -172,7 +172,8 @@ class script {
                                         if (s!=AllCurrentAuthors.MaxIndex())
                                             tmpAuthors.=", "
                                     }
-                                    CreditsAssembly.=Name " - <p>" tmpAuthors "</p>"  "`n" ;; figure out how to force this to be on one line, instead of the mess it is right now.
+                                    ;CreditsAssembly.=Name " - <p>" tmpAuthors "</p>"  "`n" ;; figure out how to force this to be on one line, instead of the mess it is right now.
+                                    CreditsAssembly.="<p>" Name " - " tmpAuthors "</p>"  "`n" ;; figure out how to force this to be on one line, instead of the mess it is right now.
                                 }
                                 else
                                     CreditsAssembly.="<p><a href=" """" Credit_URL """" ">" Author " - " Name "</a></p>`n"
@@ -244,7 +245,7 @@ class script {
         gui aboutScript:new, +alwaysontop +toolwindow, % "About " this.name
         gui margin, 2
         gui color, white
-        gui add, activex, w500 r%axHight% vdoc, htmlFile
+        gui add, activex, w600 r%axHight% vdoc, htmlFile
         gui add, button, w75 x%btnxPos% gaboutClose, % "&Close"
         doc.write(html)
         gui show, AutoSize
