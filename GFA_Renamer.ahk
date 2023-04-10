@@ -12,15 +12,14 @@ SetBatchLines,-1
 SetTitleMatchMode, 2
 creditsRaw=
 (LTRIM
-icons8    -  Icon - https://icons8.com/icon/Ou81cXLcsZzX/potted-plant"
-Gewerd Strauss   -		 main script
+Gewerd Strauss   -      main script
 anonymous1184   -       Ini.ahk, License (waiting for explicit file to be added)        -       https://gist.github.com/anonymous1184/737749e83ade98c84cf619aabf66b063,https://gist.github.com/anonymous1184/737749e83ade98c84cf619aabf66b063?permalink_comment_id=4525104#gistcomment-4525104
-author2,author3   -		 snippetName1		   		  			-	URL2,URL3
+SKAN        - Base64PNG_to_HICON, regarding licensing             -   https://www.autohotkey.com/boards/viewtopic.php?f=6&t=36636, https://www.autohotkey.com/board/topic/75906-about-my-scripts-and-snippets/
+icons8    -  Icon - https://icons8.com/icon/Ou81cXLcsZzX/potted-plant"
 Gewerd Strauss      -   partial, self-written subset of ScriptObj						    - https://github.com/Gewerd-Strauss/ScriptObj/blob/master/ScriptObj.ahk
-Base64PNG_to_HICON  - SKAN, regarding licensing             -   https://www.autohotkey.com/boards/viewtopic.php?f=6&t=36636, https://www.autohotkey.com/board/topic/75906-about-my-scripts-and-snippets/
-Gewerd Strauss - ttip
+Gewerd Strauss      - ttip      -   https://gist.github.com/Gewerd-Strauss/fad218c28b8120ab1a3cadea1a8dea9b
+author2,author3   -		 snippetName1		   		  			-	URL2,URL3
 )
-
 
 FileGetTime, ModDate,%A_ScriptFullPath%,M
 FileGetTime, CrtDate,%A_ScriptFullPath%,C
@@ -41,7 +40,7 @@ global script := {   base         : script
                     ,homepagetext : ""
                     ,homepagelink : ""
                     ,ghtext 	  : "GH-Repo"
-                    ,ghlink       : "https://github.com/Gewerd-Strauss/REPOSITORY_NAME"
+                    ,ghlink       : "https://github.com/Gewerd-Strauss/GFA-Renamer"
                     ,doctext	  : ""
                     ,doclink	  : ""
                     ,forumtext	  : ""
@@ -50,9 +49,9 @@ global script := {   base         : script
                     ,resfolder    : A_ScriptDir "\res"
                     ,iconfile	  : ""
 ;					  ,reqInternet: false
-                    ,rfile  	  : "https://github.com/Gewerd-Strauss/REPOSITORY_NAME/archive/refs/heads/BRANCH_NAME.zip"
-                    ,vfile_raw	  : "https://raw.githubusercontent.com/Gewerd-Strauss/REPOSITORY_NAME/BRANCH_NAME/version.ini" 
-                    ,vfile 		  : "https://raw.githubusercontent.com/Gewerd-Strauss/REPOSITORY_NAME/BRANCH_NAME/version.ini" 
+                    ,rfile  	  : "https://github.com/Gewerd-Strauss/GFA-Renamer/archive/refs/heads/master.zip"
+                    ,vfile_raw	  : "https://raw.githubusercontent.com/Gewerd-Strauss/GFA-Renamer/master/version.ini" 
+                    ,vfile 		  : "https://raw.githubusercontent.com/Gewerd-Strauss/GFA-Renamer/master/version.ini" 
                     ,vfile_local  : A_ScriptDir "\version.ini" 
 ;					,DataFolder:	A_ScriptDir ""
                     ,config:		[]
