@@ -288,6 +288,12 @@ fTraySetup(IconString) {
 
 
 
-#Include, <script>
-#include, <ini>
 #Include, <Base64PNG_to_HICON>
+#include, <ini>
+#Include, <script>
+#Include, <ttip>
+#Include, <AutoMoveToStick>
+#Include, <ClipboardSetFiles>
+#Include, <Object_HashmapHash>
+
+

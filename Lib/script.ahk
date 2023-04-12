@@ -109,6 +109,7 @@ class script {
             )
             html.=sTmp
         }
+        html.="<hr>"
         ; Clipboard:=html
         if (creditslink and credits) || IsObject(credits) || RegexMatch(credits,"(?<Author>(\w|)*)(\s*\-\s*)(?<Snippet>(\w|\|)*)\s*\-\s*(?<URL>.*)")
         {
@@ -242,6 +243,7 @@ class script {
         , axHight+=docHeight
         if (axHight="")
             axHight:=12
+            axHight++
         gui aboutScript:new, +alwaysontop +toolwindow, % "About " this.name
         gui margin, 2
         gui color, white
@@ -255,10 +257,9 @@ class script {
         gui aboutScript:destroy
         return
     }
-    SetIcon(Param:=true)
-    {
+    setIcon(Param:=true) {
 
-            /**
+        /*
             Function: SetIcon
             TO BE DONE: Sets iconfile as tray-icon if applicable
 
