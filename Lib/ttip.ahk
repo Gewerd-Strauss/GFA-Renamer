@@ -43,7 +43,7 @@
   ;; 
   ;; 		---
   ;; 		v.0.2.1
-  ;; 		- added Obj2Str-Conversion via "ttip_Obj2Str()"
+  ;; 		- added StringifyObject-Conversion via "ttip_StringifyObject()"
   ;; 		v.0.1.1 
   ;; 		- Initial build, 	no changelog yet
   ;; 	
@@ -58,7 +58,7 @@
   	if (text="") || (text=-1)
   		gosub, llTTIP_RemoveTTIP
   	if IsObject(text)
-  		text:=ttip_Obj2Str(text)
+  		text:=ttip_StringifyObject(text)
   	static ttip_text
   	static lastcall_tip
   	static currTip2
@@ -141,14 +141,14 @@
   	return
   }
   
-  ttip_Obj2Str(Obj,FullPath:=1,BottomBlank:=0){
+  ttip_StringifyObject(Obj,FullPath:=1,BottomBlank:=0){
   	static String,Blank
   	if(FullPath=1)
   		String:=FullPath:=Blank:=""
   	if(IsObject(Obj)){
   		for a,b in Obj{
   			if(IsObject(b))
-  				ttip_Obj2Str(b,FullPath "." a,BottomBlank)
+  				ttip_StringifyObject(b,FullPath "." a,BottomBlank)
   			else{
   				if(BottomBlank=0)
   					String.=FullPath "." a " = " b "`n"
