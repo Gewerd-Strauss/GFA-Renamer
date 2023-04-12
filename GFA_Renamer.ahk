@@ -44,6 +44,7 @@ global script := {   base         : script
                     ,vfile 		  : "https://raw.githubusercontent.com/Gewerd-Strauss/GFA-Renamer/master/version.ini" 
                     ,vfile_local  : A_ScriptDir "\version.ini" 
 ;					,DataFolder:	A_ScriptDir ""
+                    ,EL           : "51516407"
                     ,config:		[]
                     ,configfile   : A_ScriptDir "\INI-Files\" regexreplace(A_ScriptName, "\.\w+") ".ini"
                     ,configfolder : A_ScriptDir "\INI-Files"}
@@ -51,6 +52,20 @@ global script := {   base         : script
 
 
 script.SetIcon("iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAARISURBVGhD7dtLbxNXGMbxbFh2yRIpzkWQgpIUKFAVibCBknIJqCFOZNIbJg0Xp7ikkAAh4SJoCxUENiBgW6ktUldIKQURbmpAIkSiqlqg6gcAvsLLPPPKVjp5bM/xnAllMpb+K4/PeX9yjj1epGKmPpqcBmdAcLqPwcrKSol6cCo3BkczOJUbg6MZnMqNwdEMTuXG4GgGp3JjcDSDU7kG4OzvJ+TAs3NT6p04Kd1XB6TtbJc0fbZGaupq6etNqplX666VPNflrH1QesdP0b2/evAtfb03OJVrAext7x/fS9vwNlnwXiNdp1gLljXI5jNpdw22trdQwZnRI3TTQvX/NSwth1NSVVNF15tcorpKNgylZN+fp+lahfry7jG6njc4lWsAxp8W27RU237pk7kNdXRNNLe+TtJX9tHXlmr7yEG6pjc4lWsATl3aRTf1E96JhhWLp6xZv3yh9Nw+Sl/jp87LPVPWZMGpXANw89etdFO/ZcdOyPwl9fn18M6aHhNvH/a1/WfGQsGpXAPwwlVL6aYmdV89INW11e6ZTV/ZS68xadHqZXRWb3Aq1wCMMjcP041NWru/XdYPdNDnTMqMHpVEIkHn9Aancg3BH2Q30c1Nyj46Lnsef0OfM2lVz0Y6IwtO5RqCcUOQfXCcDuC39P1dkh4r/wMQZW4e8/V1lwtO5RqC0crPm+kQfup/Oizt1zZJ8teN0v/kLL3GTys+WU1nKxScyi0DjFIXd9JBSpWZOCRtI+vdMhMD9JpS4euRzVQsOJVbJhh/2uXciKTHdubBW8d20GuKhT3LuVeHU7llghG+R/E1wwYrVOetzjy4c/Rjek2h8ANlXuPbdJZSwancAGCEd3rL5QwdkNVxvTUP7vjN/41MytkjyK8wOJUbEJwLH2S4fWTDTi55rSUPTo600GsmhzVXbm2me5oEp3ItgRHuoNbs+Uh23yv8MzKHzbX/2TC9Dms097a6a7K9TINTuRbBuRJVCVmy7n3ZMJiST3/IundEvY9OSt/fZ6aA+5yfkHgO1+BavAavxRps7XKDU7khgIvlfSfZNWEEp3JjcLi9seCXdypea2ymYsGp3BjsLzbEdMZmKhacyg0AfnGjQv4Zchqcppy9nl9/jWD073dksJDCXrl92UzFglO5ZYJznR96Kz9E2GEvNoOf4FRuQPAX7bPpcGHUlZxNZ/ATnMoNCF7UOEee3+ID2u7dd+bQGfwEp3IDgtH4j7PogDZ7+NMsurff4HS1ziMw+MI0nOMg5xfBqVwL4O6O8M8xPivY3n6DU7kWwIudc8yGtFmQ84vgVK4FMArzHGNttqdJcLpa52EFfPFIeOcYnxFsT5PgVK4lcJjnGGuzPU2CU7mWwGGe46DnF8GpXEtgNP6z/XNs4/wiOF2t87AGDuMcY022l2lwKtci+P8cnMqNwdEMTuXG4GgGp3JjcDSDU7kz5j/TKppeAamEQurI/tgFAAAAAElFTkSuQmCC")
+                    ,license      : A_ScriptDir "\res\LICENSE.txt"}
+Clipboard:=currLicense:=Object_HashmapHash(A_ScriptDir "\res\LICENSE.txt")
+F:=(FileExist(A_ScriptDir "\res\LICENSE.txt") && (currLicense==script.EL))
+if !F {
+    OnMessage(0x44, "MsgBoxCallback3")
+    MsgBox 0x11, script.name - Invalid or missing license, Please keep the expected license-file for this application in the resources-subfolder of the application's directory. The license is provided with the software at download`, or at this application's github repository.`n`nThe program will exit now.
+    OnMessage(0x44, "")
+    IfMsgBox OK, {
+        ExitApp, 
+    } Else IfMsgBox Cancel, {
+        run, % script.ghlink
+        ExitApp, 
+    }
+}
 
 
 script.loadCredits(script.resfolder "\credits.txt")
@@ -201,7 +216,14 @@ MsgBoxCallback2() {
     }
     return
 }
-
+MsgBoxCallback3() {
+    DetectHiddenWindows, On
+    Process, Exist
+    If (WinExist("ahk_class #32770 ahk_pid " . ErrorLevel)) {
+        ControlSetText Button1, OK
+        ControlSetText Button2, Go to Github
+    }
+}
 writeFile(Path,Content,Encoding:="",Flags:=0x2,bSafeOverwrite:=false) { 
 
     if (bSafeOverwrite && FileExist(Path))  ;; if we want to ensure nonexistance.
