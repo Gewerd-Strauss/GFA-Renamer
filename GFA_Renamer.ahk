@@ -96,11 +96,10 @@ gui, add, text,, % "Enter Group names, delimited by a comma ','."
 gui, add, edit, vNames w200, % script.config.LastRun.Names
 gui, add, text,, % "Please set the number of pots/plants per group.`nValue must be an integer."
 gui, add, edit, vPlantsPerGroup w200 Number, % script.config.LastRun.PlantsPerGroup
-
+gui, add, text,vvUsedStick, % "used Stick: " (device_name!=""? "'" device_name "'": "Device '" script.config.config.USB_Stick_Name "' could not be found.") 
 gui, add, Button, gGFARSubmit, &Submit
-gui, add, Button, yp xp+60 gGFARHelp, &Help
-gui, add, Button, yp xp+200 gGFARAbout, &About
-gui, GFAR: show, w200 x0  y%yP%  AutoSize,% "Drop folder with images on this window"
+gui, add, Button, yp xp+64 gGFARHelp, &Help
+gui, add, Button, yp xp+51 gGFARAbout, &About
 onOpenConfig:=Func("GFARopenConfig").Bind(script.configfile)
 gui, add, button,  hwndOpenConfig yp xp+60, &Config
 GuiControl, +g,%OpenConfig%, % onOpenConfig
@@ -111,6 +110,7 @@ if !(A_IsCompiled) {
 }
 gui, font, s7
 gui, add, text,yp+20 x350,% "v." script.version " by ~Gw"
+gui, GFAR: show, w430  x%xP%  y%yP%  ,% "Drop folder with images on this window"
 return
 #if Winactive("ahk_id " GFAGui) ;; make the following hotkey only trigger when the GUI has keyboard-focus.
 Esc::GFAREscape()
