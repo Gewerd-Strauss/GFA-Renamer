@@ -44,7 +44,7 @@ script := {base         : script.base
                     ,vfile_raw	  : "https://raw.githubusercontent.com/Gewerd-Strauss/GFA-Renamer/master/version.ini" 
                     ,vfile 		  : "https://raw.githubusercontent.com/Gewerd-Strauss/GFA-Renamer/master/version.ini" 
                     ,vfile_local  : A_ScriptDir "\res\version.ini" 
-                    ,EL           : "51516407"
+                    ,EL           : "2686868786"
                     ,config:		[]
                     ,configfile   : A_ScriptDir "\res\" regexreplace(A_ScriptName, "\.\w+") ".ini"
                     ,configfolder : A_ScriptDir "\res"
