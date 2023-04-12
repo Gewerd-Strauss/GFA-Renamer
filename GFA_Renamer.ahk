@@ -101,6 +101,11 @@ gui, add, Button, gGFARSubmit, &Submit
 gui, add, Button, yp xp+60 gGFARHelp, &Help
 gui, add, Button, yp xp+200 gGFARAbout, &About
 gui, GFAR: show, w200 x0  y%yP%  AutoSize,% "Drop folder with images on this window"
+if !(A_IsCompiled) {
+    gui, add, button, hwndSetTestset yp xp+80, Set Testset
+    onSetTestset:=Func("GFARsetTestset").Bind(A_ScriptDir "\assets\Image Test Files","G14,G21,G28,G35,G42,UU",7)
+    guicontrol, +g, %SetTestset%, % onSetTestset
+}
 gui, font, s7
 gui, add, text,yp+20 x350,% "v." script.version " by ~Gw"
 return
@@ -108,6 +113,17 @@ return
 Esc::GFAREscape()
 #if ;; end the hotkey-condition
 
+;; Set the settings for the test-set files in the program's own directory.
+GFARsetTestset(Folder,Names,PlantsPerGroup) {
+    FileRemoveDir, % A_ScriptDir "\assets\Image Test Files\GFAR_WD", 1
+    guicontrol, GFAR:, Folder, % Folder
+    guicontrol, GFAR:, Names, % Names
+    guicontrol, GFAR:, PlantsPerGroup, % PlantsPerGroup
+    
+    ttip("Set test-set. Settings made in this run of the script will not be saved for next time!!")
+    script.config.Config.LastRun.Sync(false)
+    return
+}
 ;; receive the GuiDropFiles_message
 GFARGuiDropFiles(GuiHwnd, FileArray, CtrlHwnd, X, Y) { 
     for i, file in FileArray {
