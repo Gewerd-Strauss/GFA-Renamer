@@ -111,7 +111,9 @@ gui, add, text,yp+20 x350,% "v." script.version " by ~Gw"
 return
 #if Winactive("ahk_id " GFAGui) ;; make the following hotkey only trigger when the GUI has keyboard-focus.
 Esc::GFAREscape()
-#if ;; end the hotkey-condition
+#if Winactive("ahk_id " GFAR_ExcludeGui) ;; make the following hotkey only trigger when the specific GUI has keyboard-focus.
+Esc::GFAR_ExcludeEscape()
+#if ;; end the hotkey-conditions
 
 ;; Set the settings for the test-set files in the program's own directory.
 GFARsetTestset(Folder,Names,PlantsPerGroup) {
@@ -168,40 +170,150 @@ GFARSubmit() {
 
     ttip(repeatElementIofarrayNKtimes())
     TrueNumberOfFiles:=0
-    Loop, Files, % Folder "\*." script.config.Config.filetype, F
-        TrueNumberOfFiles++
-    str:="Number of Images that would be renamed given the settings provided: "  Arr.Count() "`nFound number of images: " TrueNumberOfFiles "`n"
-    Files:=str
+    ImagePaths:=[]
     Loop, Files, % Folder "\*." script.config.Config.filetype, F
     {
-        compareTimestamp(A_LoopFileFullPath)
-        if (A_Index<41)
-            Files.= A_LoopFileFullPath " - " Arr[A_Index] "`n"
+        ImageF:=A_LoopFileFullPath
+        TrueNumberOfFiles++
+        ImagePaths.Push(A_LoopFileFullPath)
+
     }
-    Clipboard:=Files
-    Gui +OwnDialogs
-    MsgBox 0x40034, % script.name " - Confirm",% "Below you can see the first 40 images changed as a sample.`n" Files "`nDo you want to proceed?"
+    str:="Number of Images that would be renamed given the settings provided: "  Arr.Count() "`nFound number of images: " TrueNumberOfFiles "`n"
+    Files:=str
 
-    IfMsgBox Yes, {
-        Loop, Files, % Folder "\*." script.config.Config.filetype, F
+
+
+    gui, GFAR_Exclude: new, +AlwaysOnTop  -SysMenu -ToolWindow -caption +Border  +hwndGFAR_ExcludeGui
+    gui, GFAR_Exclude: +OwnerGFAR
+    gui, GFAR: +disabled
+    gui, Font, s10
+    gui, add, text,,% "Please UNTICK any name you do not have an image for (at that position).`nNotes:`n - Files are not actually skipped. Instead, by unticking a row you prevent the name of a pot that you don't have an image`nof from being applied to the 'next-in-line' image.)`n - Double-click an entry in this list to view the image"
+    gui, add, Listview, gGFAR_ExcludeInspectSelection Checked vvLV_SelectedEntries w700 R30 +ReadOnly , Name | Expected Filepath
+    f_UpdateLV(Arr,ImagePaths)
+    gui, add, text,, % "Images/Names: (" ImagePaths.Count() "/" Arr.Count() ")"
+    gui, add, Button, gGFAR_ExcludeSubmit, &Continue
+    GFAR_LastImage:=Func("GFAR_ExcludeOpenPath").Bind(ImageF)
+    gui, add, Button, yp xp+80 hwndGFAR_ExcludeOpenLastImage,Open &Last image
+    GuiControl, +g, %GFAR_ExcludeOpenLastImage%, % GFAR_LastImage
+    
+    GFAR_OpenFolder:=Func("GFAR_ExcludeOpenPath").Bind(Folder)
+    gui, add, Button, yp xp+130 hwndGFAR_ExcludeOpenFolder,Open &Folder
+    GuiControl, +g, %GFAR_ExcludeOpenFolder%, % GFAR_OpenFolder
+    ;gui, add, Button, yp xp+80 gGFAR_ExcludeAbort
+    
+    gui, GFAR_Exclude: show, AutoSize,% "Exclude Names"
+    WinWaitClose, % "Exclude Names"
+    return
+}
+
+
+f_UpdateLV(Array,Array2) { 
+    ; updates the selected LV. LV MUST BE SELECTED BEFORE.
+    LV_Delete()
+    for k,v in Array {
+        SplitPath, % Array2[k], ,,, OutNameNoExt
+        LV_Add("Check",v,OutNameNoExt)
+    }
+    LV_ModifyCol(1,"auto")
+    return
+}
+GFAR_ExcludeOpenPath(Path) {
+    gui, GFAR_Exclude: -AlwaysOnTop
+
+    Run, % Path, , , vPID
+    gui, GFAR_Exclude: +AlwaysOnTop
+    
+    return
+}
+GFAR_ExcludeInspectSelection() {
+    global
+    
+    sel:=f_GetSelectedLVEntries()
+    sel2:=strsplit(sel[1],"||")
+    Delim:=(SubStr(Folder, -1 )!="\"?"\":"")
+    InspectedImage:=Folder  Delim sel2[3] "." script.config.Config.filetype
+    run, % InspectedImage
+    return
+}
+f_GetSelectedLVEntries() {
+    vRowNum:=0
+    sel:=[]
+    loop
+    {
+        vRowNum:=LV_GetNext(vRowNum)
+        if not vRowNum  ; The above returned zero, so there are no more selected rows.
+            break
+        LV_GetText(sCurrText1,vRowNum,1)
+        LV_GetText(sCurrText2,vRowNum,2)
+        LV_GetText(sCurrText3,vRowNum,3)
+        sel[A_Index]:="||" sCurrText1 "||" sCurrText2 "||" sCurrText3
+    }
+    return sel
+}
+f_GetCheckedLVEntries() {
+    vRowNum:=0
+    sel:=[]
+    loop
+    {
+        vRowNum:=LV_GetNext(vRowNum,"C")
+        if not vRowNum  ; The above returned zero, so there are no more checked rows.
+            break
+        LV_GetText(sCurrText1,vRowNum,1)
+        LV_GetText(sCurrText2,vRowNum,2)
+        LV_GetText(sCurrText3,vRowNum,3)
+        sel[A_Index]:="||" sCurrText1 "||" sCurrText2 "||" sCurrText3
+    }
+    return sel
+}
+GFAR_ExcludeEscape() {
+    gui, GFAR: -disabled
+    gui, GFAR_Exclude: destroy
+    ;MsgBox 0x40034, % script.name " - Confirm", % "No changes occured. Return to first GUI"
+    return
+}
+
+GFAR_ExcludeSubmit() {
+    global
+    gui, GFAR: -disabled
+    Sel:=f_GetCheckedLVEntries()            ;; retrieve all rows of the Listview that we have checked/not unchecked
+    gui, GFAR_Exclude: Submit               ;; submit the GUI to get all data inputted into it formally.
+
+
+    ;; we have deselected some files in the final GUI. Thus, we cannot  use a fileloop easily
+    if (Sel.Count()<TrueNumberOfFiles) {
+        Log:="Expected Number of images: " Sel_Arr.Count() "`nFound Number of images: " Sel_Arr.Count() "`n"
+        FilestoCopy:=""
+        for Sel_Index,Sel_String in Sel     ;; iterate over all entries that we left checked. These will be renamed based on the Entries of the Listview - the name displayed will be applied to the respectively displayed filename
         {
-            scriptWorkingDir:=renameFile(A_LoopFileFullPath,Arr[A_Index],true,A_Index,TrueNumberOfFiles)
-            writeFile(scriptWorkingDir "\gfa_renamer_log.txt",Files, "UTF-8-RAW","w",true)
+            Sel_Arr:=strsplit(Sel_String,"||")
+            Delim:=(SubStr(Folder, -1 )!="\"?"\":"")
+            RenamedImage:=Folder  Delim Sel_Arr[3] "." script.config.Config.filetype
+            scriptWorkingDir:=renameFile(RenamedImage,Sel_Arr[2],true,Sel_Index,Sel.Count())
+            Log.=RenamedImage " - " Sel_Arr[2] "`n"
+            FilestoCopy.=RenamedImage "`n"
         }
-        ttip(script.name " - Finished running")
-        OnMessage(0x44, "OnMsgBox2")
-        MsgBox 0x40, `% script.name " - " Script finished, The script finished running.`nThe folder containing the renamed images will open once this message box is closed.`n`nA log mapping each image to its new name is given in the file 'gfa_renamer_log.txt' within the output directory 'GFAR_WD'. The original image files are preserved in the original folder.
-        OnMessage(0x44, "")
+        writeFile(scriptWorkingDir "\gfa_renamer_log.txt",Log, "UTF-8-RAW","w",true)    ;; ensure the log-file is written as UTF-8, in case there are unicode characters in any groupname. Just a precaution
+    } else {
+        Log:="Expected Number of images: " Arr.Count() "`nFound Number of images: " Arr.Count() "`n"
+        Loop, Files, % Folder "\*." script.config.Config.filetype, F
+            {
+                scriptWorkingDir:=renameFile(A_LoopFileFullPath,Arr[A_Index],true,A_Index,TrueNumberOfFiles)
+                Log.=A_LoopFileFullPath " - " Arr[A_Index] "`n"
+                FilestoCopy.=A_LoopFileFullPath "`n"
+        }
+        writeFile(scriptWorkingDir "\gfa_renamer_log.txt",Log, "UTF-8-RAW","w",true)
+    }
+    ttip(script.name " - Finished running")
+    OnMessage(0x44, "OnMsgBox2")
+    MsgBox 0x40, % script.name " -  Script finished",% "The script finished running.`nThe folder containing the renamed images will open once this message box is closed.`n`nA log mapping each image to its new name is given in the file 'gfa_renamer_log.txt' within the output directory 'GFAR_WD'. The original image files are preserved in the original folder."
+    OnMessage(0x44, "")
 
-        if (WinExist(scriptWorkingDir " ahk_exe explorer.exe")) {
-            WinActivate
-            return
-        } 
-        Else {
-            run, % scriptWorkingDir
-        }
-    } Else IfMsgBox No, {
-        MsgBox 0x40034, % script.name " - Confirm", % "No changes occured. Exiting application now."
+    if (WinExist(scriptWorkingDir " ahk_exe explorer.exe")) {
+        WinActivate
+        return
+    } 
+    Else {
+        run, % scriptWorkingDir
     }
     ExitApp
     return
