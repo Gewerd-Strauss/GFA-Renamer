@@ -357,7 +357,7 @@ compareTimestamp(File) {
 
         Diff:=CT-lastCT
     }
-    m("prep a double image by the auslöser for testing here!")
+    ttip("prep a double image by the auslöser for testing here!")
     return bool
 }
 MsgBoxCallback() {
