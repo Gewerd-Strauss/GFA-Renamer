@@ -321,4 +321,31 @@ class script {
         }
         return
     }
+    loadCredits(Path:="\credits.txt") {
+        /*
+            Function: readCredits
+            helper-function to read a credits-file in supported format into the class
+
+            Parameters:
+            Path -  Path to the credits-file. 
+                    If the path begins with "\", it will be relative to the script-directory (aka, it will be processed as %A_ScriptDir%\%Path%)
+        */
+        if (SubStr(Path,1,1)="\") {
+            Path:=A_ScriptDir . Path
+        }
+        FileRead, text, % Path
+        this.credits:=text
+    }
+    __Init() {
+
+    }
+    requiresInternet(URL="https://autohotkey.com/boards/") {                            	;-- Returns true if there is an available internet connection
+        if (this.reqInternet) {
+            return DllCall("Wininet.dll\InternetCheckConnection", "Str", URL,"UInt", 1, "UInt",0, "UInt")
+        }
+        else { ;; we don't care about internet connectivity, so we always return true
+            return TRUE
+            
+        }
+    }
 }

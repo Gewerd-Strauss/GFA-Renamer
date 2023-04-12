@@ -1,0 +1,8 @@
+Gewerd Strauss   -      main script
+anonymous1184   -       Ini.ahk, License (waiting for explicit file to be added)        -       https://gist.github.com/anonymous1184/737749e83ade98c84cf619aabf66b063,https://gist.github.com/anonymous1184/737749e83ade98c84cf619aabf66b063?permalink_comment_id=4525104#gistcomment-4525104
+SKAN        - Base64PNG_to_HICON, regarding licensing             -   https://www.autohotkey.com/boards/viewtopic.php?f=6&t=36636, https://www.autohotkey.com/board/topic/75906-about-my-scripts-and-snippets/
+icons8    -  Icon - https://icons8.com/icon/Ou81cXLcsZzX/potted-plant"
+author2,author3   -		 snippetName1		   		  			-	URL2,URL3
+Gewerd Strauss      -   partial, self-written subset of ScriptObj						    - https://github.com/Gewerd-Strauss/ScriptObj/blob/master/ScriptObj.ahk
+Gewerd Strauss      - ttip      -   https://gist.github.com/Gewerd-Strauss/fad218c28b8120ab1a3cadea1a8dea9b
+Gewerd Strauss           - StringifyObject   
