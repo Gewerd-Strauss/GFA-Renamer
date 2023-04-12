@@ -38,7 +38,7 @@ global script := {   base         : script
                     ,donateLink	  : ""
                     ,resfolder    : A_ScriptDir "\res"
                     ,iconfile	  : ""
-;					  ,reqInternet: false
+                    ,reqInternet: false
                     ,rfile  	  : "https://github.com/Gewerd-Strauss/GFA-Renamer/archive/refs/heads/master.zip"
                     ,vfile_raw	  : "https://raw.githubusercontent.com/Gewerd-Strauss/GFA-Renamer/master/version.ini" 
                     ,vfile 		  : "https://raw.githubusercontent.com/Gewerd-Strauss/GFA-Renamer/master/version.ini" 
@@ -68,6 +68,9 @@ if !F {
 }
 
 
+if !script.requiresInternet() {
+    ExitApp
+}
 script.loadCredits(script.resfolder "\credits.txt")
 
 script.config:=ini(script.configfile)
