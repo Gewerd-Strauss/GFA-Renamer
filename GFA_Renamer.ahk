@@ -101,6 +101,9 @@ gui, add, Button, gGFARSubmit, &Submit
 gui, add, Button, yp xp+60 gGFARHelp, &Help
 gui, add, Button, yp xp+200 gGFARAbout, &About
 gui, GFAR: show, w200 x0  y%yP%  AutoSize,% "Drop folder with images on this window"
+onOpenConfig:=Func("GFARopenConfig").Bind(script.configfile)
+gui, add, button,  hwndOpenConfig yp xp+60, &Config
+GuiControl, +g,%OpenConfig%, % onOpenConfig
 if !(A_IsCompiled) {
     gui, add, button, hwndSetTestset yp xp+80, Set Testset
     onSetTestset:=Func("GFARsetTestset").Bind(A_ScriptDir "\assets\Image Test Files","G14,G21,G28,G35,G42,UU",7)
@@ -142,6 +145,31 @@ GFARHelp() {
     MsgBox 0x20, % script.name " - Help/HowTo", 1. Drag and Drop a folder containing all images you want to rename on the GUI.`n`n2. Please give all group names in the correct order from top to bottom`nas seen in the list of images when sorted by name in descending`norder (1.png → 2.png → 3.png → ...). Names must be delimited by a`ncomma '`,'. Commas cannot be part of the name`, use dots '.'.`n`n3. Please set the number of pots/plants per group.`nValue must be an integer.`n`n4. Submit & check the proposed changes if you want.`n`n5. Confirm. The files will now be renamed.
     return
 }
+GFARopenConfig(configfile) {
+    static
+    gui, Submit, NoHide
+    RunWait, % configfile,,,PID
+    WinWaitClose, % "ahk_PID" PID
+    Gui +OwnDialogs
+    OnMessage(0x44, "GFARopenConfig_OnMsgBox")
+    MsgBox 0x40044, %  script.name " > " A_ThisFunc "()", You modified the configuration for this script.`nReload?
+    OnMessage(0x44, "")
+    IfMsgBox Yes, {
+        reload
+    } Else IfMsgBox No, {
+        
+    }
+    return
+}
+GFARopenConfig_OnMsgBox() {
+    DetectHiddenWindows, On
+    Process, Exist
+    If (WinExist("ahk_class #32770 ahk_pid " . ErrorLevel)) {
+        ControlSetText Button1, Reload
+        ControlSetText Button2, Continue
+    }
+}
+
 GFAREscape() {
     gui, GFAR: destroy
     ExitApp
