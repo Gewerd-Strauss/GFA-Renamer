@@ -112,7 +112,7 @@ gui, font, s7
 gui, add, text,yp+20 x350,% "v." script.version " by ~Gw"
 gui, GFAR: show, w430  x%xP%  y%yP%  ,% "Drop folder with images on this window"
 return
-#if Winactive("ahk_id " GFAGui) ;; make the following hotkey only trigger when the GUI has keyboard-focus.
+#if Winactive("ahk_id " GFAGui) ;; make the following hotkey only trigger when the specific GUI has keyboard-focus.
 Esc::GFAREscape()
 #if Winactive("ahk_id " GFAR_ExcludeGui) ;; make the following hotkey only trigger when the specific GUI has keyboard-focus.
 Esc::GFAR_ExcludeEscape()
