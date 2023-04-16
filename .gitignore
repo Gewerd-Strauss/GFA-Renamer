@@ -2,3 +2,7 @@
 *.xlsx
 assets/Image Test Files/GFAR_WD/gfa_renamer_log.txt
 assets/Image Test Files/GFAR_WD/*.JPG
+assets/Image Test Files/*.zip
+assets/Image Test Files/*.JPG
+assets/Documentation/*.rmd
+assets/Documentation/*.ahk
