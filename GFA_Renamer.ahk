@@ -84,6 +84,7 @@ if !script.config.Count() {
     MsgBox 0x40, % script.name " - Initialisation",% "Initialised settings-file. `nThis will keep track of the last data you provided.`n`nThis config-file is located at`n`n'" A_ScriptDir "\res\" A_ScriptName ".ini'`n`nYou can now continue."
     OnMessage(0x44, "")
 }
+OnExit("Cleanup")
 script.version:=script.config.Config.Version
 ;; setup the GUI.
 yP:=A_ScreenHeight-500
@@ -490,6 +491,7 @@ fTraySetup(IconString) {
 
 #Include, <Base64PNG_to_HICON>
 #include, <ini>
+#Include, <Cleanup>
 #Include, <CountFilesR>
     #Include, <Hash_File>
 #Include, <script>
