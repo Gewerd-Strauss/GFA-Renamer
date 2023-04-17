@@ -412,10 +412,35 @@ GFAR_ExcludeSubmit() {
     }
     return
 }
+f_GetSelectedLVEntries() {
+    vRowNum:=0
+    sel:=[]
+    loop
+    {
+        vRowNum:=LV_GetNext(vRowNum)
+        if not vRowNum  ; The above returned zero, so there are no more selected rows.
+            break
+        LV_GetText(sCurrText1,vRowNum,1)
+        LV_GetText(sCurrText2,vRowNum,2)
+        LV_GetText(sCurrText3,vRowNum,3)
+        sel[A_Index]:="||" sCurrText1 "||" sCurrText2 "||" sCurrText3
     }
-    return
+    return sel
 }
+f_GetCheckedLVEntries() {
+    vRowNum:=0
+    sel:=[]
+    loop
+    {
+        vRowNum:=LV_GetNext(vRowNum,"C")
+        if not vRowNum  ; The above returned zero, so there are no more checked rows.
+            break
+        LV_GetText(sCurrText1,vRowNum,1)
+        LV_GetText(sCurrText2,vRowNum,2)
+        LV_GetText(sCurrText3,vRowNum,3)
+        sel[A_Index]:="||" sCurrText1 "||" sCurrText2 "||" sCurrText3
     }
+    return sel
 }
 writeFile(Path,Content,Encoding:="",Flags:=0x2,bSafeOverwrite:=false) { 
 
