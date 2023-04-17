@@ -92,7 +92,8 @@ yP:=A_ScreenHeight-500
 xP:=A_ScreenWidth-440
 gui, GFAR: new, +AlwaysOnTop -SysMenu -ToolWindow -caption +Border  +hwndGFAGui
 gui, Font, s10
-gui, add, text,,% "Please drag and drop the folder you want to use on this window.`n`nChosen folder:"
+gui, add, text,vCHSNFLDR_STRING,% "Please drag and drop the folder you want to use on this window.`n`nChosen folder:"
+
 try {
     LastRunCount:=false
     if FileExist(script.config.LastRun.Folder) {
