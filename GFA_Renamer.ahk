@@ -93,8 +93,8 @@ gui, add, text,, % "Enter Group names, delimited by a comma ','."
 gui, add, edit, vNames w200, % script.config.LastRun.Names
 gui, add, text,, % "Please set the number of pots/plants per group.`nValue must be an integer."
 gui, add, edit, vPlantsPerGroup w200 Number, % script.config.LastRun.PlantsPerGroup
-gui, add, Button, gGFARSubmit, &Submit
 ;gui, add, text,vvUsedStick, % "used Stick: " (device_name!=""? "'" device_name "'": "Device '" script.config.config.USB_Stick_Name "' could not be found.") 
+gui, add, Button, vSubmitButton disabled gGFARSubmit, &Submit
 gui, add, Button, yp xp+64 gGFARHelp, &Help
 gui, add, Button, yp xp+51 gGFARAbout, &About
 onOpenConfig:=Func("GFARopenConfig").Bind(script.configfile)
@@ -128,8 +128,12 @@ GFARsetTestset(Folder,Names,PlantsPerGroup) {
 }
 ;; receive the GuiDropFiles_message
 GFARGuiDropFiles(GuiHwnd, FileArray, CtrlHwnd, X, Y) { 
+    Count:=0
     for i, file in FileArray {
         guicontrol,, Folder, % file
+        if CountFilesR(file,i) {
+            guicontrol,GFAR: enable, SubmitButton
+        }
     }
     return
 }
