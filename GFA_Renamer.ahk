@@ -198,16 +198,23 @@ GFARSubmit() {
     if (Folder="") {
         ttip("Please provide a Folder containing the images you want to name by dragging it onto this window.")
     }
+    Arr:=""
     Arr:={}
     script.config.LastRun.Folder:=Folder
     script.config.LastRun.Names:=Names
     script.config.LastRun.PlantsPerGroup:=PlantsPerGroup
-    ; script.save()
     LoopCount:=PlantsPerGroup*strsplit(Names,",").Count()
     loop % LoopCount
-        Arr.push(repeatElementIofarrayNKtimes(strsplit(Names,","),PlantsPerGroup) " (" repeatIndex(PlantsPerGroup) ")")
+    {
+        bReset:=(!(mod(A_Index,PlantsPerGroup))) ;; force a reset in call_index every 'PlantsPerGroup'
+        GroupName:=repeatElementIofarrayNKtimes(strsplit(Names,","),PlantsPerGroup,,bReset,Names)
+        Number:=repeatIndex(PlantsPerGroup)
+        Arr.push(GroupName " (" Number ")")
+        if (bReset) {
             
-    ttip(repeatElementIofarrayNKtimes())
+        }
+    }
+    ;ttip(repeatElementIofarrayNKtimes())
     TrueNumberOfFiles:=0
     ImagePaths:=[]
     
@@ -215,6 +222,9 @@ GFARSubmit() {
     
     Loop, Files, % Folder "\*." script.config.Config.filetype, % opt
     {
+        if (InStr(A_LoopFileDir,"GFAR_WD")) {
+            continue
+        }
         ImageF:=A_LoopFileFullPath
         TrueNumberOfFiles++
         ImagePaths.Push(A_LoopFileFullPath)
@@ -231,21 +241,26 @@ GFARSubmit() {
     gui, GFAR_Exclude: +OwnerGFAR
     gui, GFAR: +disabled
     gui, Font, s10
-    gui, add, text,,% "Please UNTICK any name you do not have an image for (at that position).`nNotes:`n - Files are not actually skipped. Instead, by unticking a row you prevent the name of a pot that you don't have an image`nof from being applied to the 'next-in-line' image.)`n - Double-click an entry in this list to view the image"
-    gui, add, Listview, gGFAR_ExcludeInspectSelection Checked vvLV_SelectedEntries w700 R30 +ReadOnly , Name | Expected Filepath
-    f_UpdateLV(Arr,ImagePaths)
+    gui, add, text,,% "Please UNTICK any name you do not have an image for (at that position).`nNotes:`n - Files are not actually skipped. Instead, by unticking a row you prevent the name of a pot that you don't have an image`nof from being applied to the 'next-in-line' image.)`n - Double-click an entry in this list to view the image`n - Select an image and press F2 if you want to change the name it will be assigned (and you know what you are doing.)"
+    gui, add, Listview,  Checked vvLV_SelectedEntries w700 R30 -ReadOnly WantF2 Report gGFAR_ExcludeInspectSelection, Name | Expected Filepath
     ;Arr2:=ForceOrder(Arr)
     ImagePaths2:=ForceOrder(ImagePaths)
+    ;Clipboard:= "OLD:`n" StringifyObject(Arr) "`n---`n" StringifyObject(ImagePaths) "`n---`n" "`n---`nNEW:`n" StringifyObject(Arr2) "`n---`n" StringifyObject(ImagePaths2)
+    f_UpdateLV(Arr,ImagePaths2)
     gui, add, text,, % "Images/Names: (" ImagePaths.Count() "/" Arr.Count() ")"
     gui, add, Button, gGFAR_DuplicatetoShiftFrame vvGFAR_DuplicatetoShiftFrame disabled, &Duplicate to shift frame
     gui, add, Button,yp xp+170 vvGFAR_ExcludeSubmitButton gGFAR_ExcludeSubmit, &Continue
+    
     GFAR_LastImage:=Func("GFAR_ExcludeOpenPath").Bind(ImageF)
     gui, add, Button, yp xp+80 hwndGFAR_ExcludeOpenLastImage,Open &Last image
     GuiControl, +g, %GFAR_ExcludeOpenLastImage%, % GFAR_LastImage
     
     GFAR_OpenFolder:=Func("GFAR_ExcludeOpenPath").Bind(Folder)
+    GFAR_OpenSelectedImage:=Func("GFAR_ExcludeInspectSelection").Bind(Folder)
     gui, add, Button, yp xp+130 hwndGFAR_ExcludeOpenFolder,Open &Folder
+    gui, add, Button, yp xp+130 hwndGFAR_ExcludeInspect, Open &Selected Image
     GuiControl, +g, %GFAR_ExcludeOpenFolder%, % GFAR_OpenFolder
+    GuiControl, +g, %GFAR_ExcludeInspect%, % GFAR_OpenSelectedImage
     ;gui, add, Button, yp xp+80 gGFAR_ExcludeAbort
     if (ImagePaths.Count()<Arr.Count()) {
         guicontrol, GFAR_Exclude: Disable,vGFAR_ExcludeSubmitButton
@@ -309,66 +324,49 @@ GFAR_ExcludeOpenPath(Path) {
     
     return
 }
+
 GFAR_ExcludeInspectSelection() {
     global
-    
     sel:=f_GetSelectedLVEntries()
     sel2:=strsplit(sel[1],"||")
     Delim:=(SubStr(Folder, -1 )!="\"?"\":"")
+    LV_ModifyCol(1,"auto")
     if (TEST_FOLDERPATH!="") {
         InspectedImage:=TEST_FOLDERPATH  Delim  sel2[3] "." script.config.Config.filetype
     } else {
         InspectedImage:=Folder  Delim  sel2[3] "." script.config.Config.filetype
-    run, % InspectedImage
+    }
+    if (FileExist(InspectedImage) && A_GuiEvent!="e") {
+        run, % InspectedImage
+    }
     return
-    }
-f_GetSelectedLVEntries() {
-    vRowNum:=0
-    sel:=[]
-    loop
-    {
-        vRowNum:=LV_GetNext(vRowNum)
-        if not vRowNum  ; The above returned zero, so there are no more selected rows.
-            break
-        LV_GetText(sCurrText1,vRowNum,1)
-        LV_GetText(sCurrText2,vRowNum,2)
-        LV_GetText(sCurrText3,vRowNum,3)
-        sel[A_Index]:="||" sCurrText1 "||" sCurrText2 "||" sCurrText3
-    }
-    return sel
 }
-f_GetCheckedLVEntries() {
-    vRowNum:=0
-    sel:=[]
-    loop
-    {
-        vRowNum:=LV_GetNext(vRowNum,"C")
-        if not vRowNum  ; The above returned zero, so there are no more checked rows.
-            break
-        LV_GetText(sCurrText1,vRowNum,1)
-        LV_GetText(sCurrText2,vRowNum,2)
-        LV_GetText(sCurrText3,vRowNum,3)
-        sel[A_Index]:="||" sCurrText1 "||" sCurrText2 "||" sCurrText3
-    }
-    return sel
-}
+
+
 GFAR_ExcludeEscape() {
     gui, GFAR: -disabled
     gui, GFAR_Exclude: destroy
     ;MsgBox 0x40034, % script.name " - Confirm", % "No changes occured. Return to first GUI"
     return
 }
-
 GFAR_ExcludeSubmit() {
     global
     gui, GFAR: -disabled
+    
     Sel:=f_GetCheckedLVEntries()            ;; retrieve all rows of the Listview that we have checked/not unchecked
     gui, GFAR_Exclude: Submit               ;; submit the GUI to get all data inputted into it formally.
 
+    Count_CopiedImages:=0                   ;; if duplicates are excluded or padding files exist, we want less files in the output than in the Working Directory.
+    
+    /*
+    ;; we have deselected some files in the final GUI. Thus, we cannot  use a fileloop easily. This can have the following reasons:
 
-    ;; we have deselected some files in the final GUI. Thus, we cannot  use a fileloop easily
+    1. We have deselected images because they are wrong, but all images afterwards are correct 
+    (aka, all intended images have been assigned the names they should receive, but for whatever reason we don't want the image X to be processed - maybe it was damaged and the plant was removed, but the image was shot beforehand, or was shot to make processing easier.)
+    */
     if (Sel.Count()<TrueNumberOfFiles) {
-        Log:="Expected Number of images: " Sel_Arr.Count() "`nFound Number of images: " Sel_Arr.Count() "`n"
+        Log:="Expected Number of images: " TrueNumberOfFiles "`nFound Number of images: " Sel.Count() "`n"
+        LogBody:=""
         FilestoCopy:=""
         for Sel_Index,Sel_String in Sel     ;; iterate over all entries that we left checked. These will be renamed based on the Entries of the Listview - the name displayed will be applied to the respectively displayed filename
         {
@@ -379,40 +377,65 @@ GFAR_ExcludeSubmit() {
             Delim:=(SubStr(Folder, -1 )!="\"?"\":"")
             RenamedImage:=Folder  Delim Sel_Arr[3] "." script.config.Config.filetype
             scriptWorkingDir:=renameFile(RenamedImage,Sel_Arr[2],true,Sel_Index,Sel.Count())
-            Log.=RenamedImage " - " Sel_Arr[2] "`n"
-            FilestoCopy.=RenamedImage "`n"
+            LogBody.=RenamedImage " - " Sel_Arr[2] "`n"
+            FilestoCopy.=scriptWorkingDir "\" Arr[A_Index] "." script.config.Config.filetype "`n"
+            Count_CopiedImages++            ;; for every file that is renamed, 
         }
-        writeFile(scriptWorkingDir "\gfa_renamer_log.txt",Log, "UTF-8-RAW","w",true)    ;; ensure the log-file is written as UTF-8, in case there are unicode characters in any groupname. Just a precaution
+        writeFile(logfile:=scriptWorkingDir "\__gfa_renamer_log.txt",Log LogBody, "UTF-8-RAW","w",true)    ;; ensure the log-file is written as UTF-8, in case there are unicode characters in any groupname. Just a precaution
     } else {
-        Log:="Expected Number of images: " Arr.Count() "`nFound Number of images: " Arr.Count() "`n"
-        Loop, Files, % Folder "\*." script.config.Config.filetype, F
+        Log:="Expected Number of images: " TrueNumberOfFiles "`nFound Number of images: " Sel.Count() "`n"
+        for Sel_Index,Sel_String in Sel     ;; iterate over all entries that we left checked. These will be renamed based on the Entries of the Listview - the name displayed will be applied to the respectively displayed filename
         {
-                scriptWorkingDir:=renameFile(A_LoopFileFullPath,Arr[A_Index],true,A_Index,TrueNumberOfFiles)
-                Log.=A_LoopFileFullPath " - " Arr[A_Index] "`n"
-                FilestoCopy.=A_LoopFileFullPath "`n"
             if (TEST_FOLDERPATH!="") {
                 Folder:=TEST_FOLDERPATH
             }
-        writeFile(scriptWorkingDir "\gfa_renamer_log.txt",Log, "UTF-8-RAW","w",true)
+            Sel_Arr:=strsplit(Sel_String,"||")
+            Delim:=(SubStr(Folder, -1 )!="\"?"\":"")
+            RenamedImage:=Folder  Delim Sel_Arr[3] "." script.config.Config.filetype
+            if InStr(Sel_Arr[3],"(padding)") { ;; remove padding files and advance to next iteration
+                FileDelete, % RenamedImage
+                continue
             }
-    ttip(script.name " - Finished running")
-    OnMessage(0x44, "OnMsgBox2")
-    MsgBox 0x40, % script.name " -  Script finished",% "The script finished running.`nThe folder containing the renamed images will open once this message box is closed.`n`nA log mapping each image to its new name is given in the file 'gfa_renamer_log.txt' within the output directory 'GFAR_WD'. The original image files are preserved in the original folder."
-    OnMessage(0x44, "")
+            scriptWorkingDir:=renameFile(RenamedImage,Sel_Arr[2],true,Sel_Index,Sel.Count())
+            LogBody.=RenamedImage " - " Sel_Arr[2] "`n"
+            FilestoCopy.=scriptWorkingDir "\" Sel_Arr[2] "." script.config.Config.filetype "`n"
+            Count_CopiedImages++            ;; for every file that is renamed, 
+        }
+        Log.="Renamed Number of images: " Count_CopiedImages "`n"
+        writeFile(logfile:=scriptWorkingDir "\__gfa_renamer_log.txt",Log LogBody, "UTF-8-RAW","w",true)
+    }
+    FilestoCopy.=logfile "`n"
+    if (script.config.Config.PutFilesOnClipboardForPastingToStick) {
+        if !ClipboardSetFiles(FilestoCopy,"Move") {
+            StdErr_Write(A_LineNumber, "ClipboardSetFiles was unable to put the renamed images to the clipboard.", spec = FilestoCopy)
             
+        }
+    } else {
         if (WinExist(scriptWorkingDir " ahk_exe explorer.exe")) {
             WinActivate
             return
         } 
         Else {
             run, % scriptWorkingDir
-    }
-    ExitApp
-    return
         }
     }
+    ttip(script.name " - Finished running")
+    OnMessage(0x44, "OnMsgBox2")
+    FinalInfoBox_String:="The script finished running.`n"
+    FinalInfoBox_String.= (script.config.Config.PutFilesOnClipboardForPastingToStick)
+                        ? "The renamed image files are now ready to be pasted into whatever folder you want. Just open your intended folder and press 'CTRL-V'.`n`nAdditionally, a log file is copied. This log-file displays for every file that got renamed its original path. Files which are not renamed - and thus are missing in the output - are not shown in the log."
+                        : "- The folder containing the renamed images will open once this message box is closed.`n`nA log mapping each image to its new name is given in the file '__gfa_renamer_log.txt' within the output directory 'GFAR_WD'. The original image files are preserved in the original folder."
+    MsgBox 0x40, % script.name " -  Script finished",% FinalInfoBox_String
+    OnMessage(0x44, "")
+    scriptWorkingDir2:=""
+    scriptWorkingDir2:=scriptWorkingDir
+    ExitApp
     return
 }
+
+
+
+
 f_GetSelectedLVEntries() {
     vRowNum:=0
     sel:=[]
@@ -487,9 +510,14 @@ repeatIndex(repetitions) {
     OutputDebug, % lastreturn "`n"
     return lastreturn
 }
-repeatElementIofarrayNKtimes(array:="",repetitions:="",bDebug:=true) {
+repeatElementIofarrayNKtimes(array:="",repetitions:="",bDebug:=true,resetCallIndex:=False,Names:="") {
     static k, callIndex, position, sites := []
-    if (sites.Count() = 0) { ; It is the first run, let set variables and see their contents
+    static lastNames:=""
+    if (lastNames="") {
+        lastNames:=Names
+    }
+    if (sites.Count() = 0) || (lastNames!=Names) { ; It is the first run, let set variables and see their contents
+        lastNames:=Names
         k := 5         ; Arbitrary set to a desired value
         k := repetitions
         callIndex := 0 ; Always start at zero to add from there
@@ -500,7 +528,7 @@ repeatElementIofarrayNKtimes(array:="",repetitions:="",bDebug:=true) {
         OutputDebug % "Calls (K-iterations): " k "`n"
     }
     site := sites[position]
-    OutputDebug % position ": " site "`n"
+    OutputDebug % callIndex    site " - "
 
     callIndex++ ; Increment `callIndex`, meaning that we made a new call to the function
     modResult := Mod(callIndex, k)
@@ -508,6 +536,9 @@ repeatElementIofarrayNKtimes(array:="",repetitions:="",bDebug:=true) {
         position++ ; Increase the position by 1
     if (position > sites.Count()) ; If the new position is bigger than the actual number of elements in the array
         position := 1 ; Reset the position to start over
+    if (resetCallIndex) { ;; force-reset the CI
+        callIndex := 0 ; Always start at zero to add from there
+    }
     return site
 }
 
