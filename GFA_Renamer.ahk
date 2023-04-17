@@ -34,6 +34,7 @@ script := {base         : script.base
                     ,ghlink       : "https://github.com/Gewerd-Strauss/GFA-Renamer"
                     ,doctext	  : "Documentation"
                     ,doclink	  : "https://github.com/Gewerd-Strauss/GFA-Renamer#readme"
+                    ,offdoclink   : A_ScriptDir "\assets\Documentation\GFA_Renamer_Readme.html"
                     ,forumtext	  : ""
                     ,forumlink	  : ""
                     ,donateLink	  : ""

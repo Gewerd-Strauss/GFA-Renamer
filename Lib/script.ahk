@@ -39,6 +39,7 @@ class script {
         , ghlink := ghlink ? ghlink : RegExReplace(this.ghlink, "http(s)?:\/\/")
         , doctext := doctext ? doctext : RegExReplace(this.doctext, "http(s)?:\/\/")
         , doclink := doclink ? doclink : RegExReplace(this.doclink, "http(s)?:\/\/")
+        , offdoclink := offdoclink ? offdoclink : this.offdoclink
         , forumtext := forumtext ? forumtext : RegExReplace(this.forumtext, "http(s)?:\/\/")
         , forumlink := forumlink ? forumlink : RegExReplace(this.forumlink, "http(s)?:\/\/")
         , homepagetext := homepagetext ? homepagetext : RegExReplace(this.homepagetext, "http(s)?:\/\/")
@@ -108,6 +109,16 @@ class script {
                         <p><a href="https://%doclink%" target="_blank">%doctext%</a></p>
             )
             html.=sTmp
+        }
+        if offdoclink && doctext 
+        {
+            Clipboard:=offdoclink
+            sTmp=
+            (
+
+                        <p><a href="file:///%A_ScriptDir%\assets\Documentation\index.md">D%doctext%</a></p>
+            ) ;#todo: figure out how to open local files through this.
+            ;html.=sTmp
         }
         html.="<hr>"
         ; Clipboard:=html
