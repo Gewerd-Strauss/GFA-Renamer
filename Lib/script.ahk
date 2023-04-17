@@ -340,8 +340,8 @@ class script {
     __Init() {
 
     }
-    requiresInternet(URL="https://autohotkey.com/boards/") {                            	;-- Returns true if there is an available internet connection
-        if (this.reqInternet) {
+    requiresInternet(URL:="https://autohotkey.com/boards/",Overwrite:=false) {                            	;-- Returns true if there is an available internet connection
+        if ((this.reqInternet) || Overwrite) {
             return DllCall("Wininet.dll\InternetCheckConnection", "Str", URL,"UInt", 1, "UInt",0, "UInt")
         }
         else { ;; we don't care about internet connectivity, so we always return true
