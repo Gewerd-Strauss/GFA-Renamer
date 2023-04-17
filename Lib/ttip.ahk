@@ -50,7 +50,7 @@
   ;; 	
   ;; 	*/
 
-  ACS_ttip(text:="TTIP: Test",mode:=1,to:=4000,xp:="NaN",yp:="NaN",CoordMode:=-1,to2:=1750,Times:=20,currTip:=20)
+  ttip(text:="TTIP: Test",mode:=1,to:=4000,xp:="NaN",yp:="NaN",CoordMode:=-1,to2:=1750,Times:=20,currTip:=20)
   {
 	  
 	  cCoordModeTT:=A_CoordModeToolTip
