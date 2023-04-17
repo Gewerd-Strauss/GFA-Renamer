@@ -49,7 +49,7 @@ script := {base         : script.base
                     ,configfile   : A_ScriptDir "\res\" regexreplace(A_ScriptName, "\.\w+") ".ini"
                     ,configfolder : A_ScriptDir "\res"
                     ,license      : A_ScriptDir "\res\LICENSE.txt"}
-Clipboard:=currLicense:=Object_HashmapHash(A_ScriptDir "\res\LICENSE.txt")
+currLicense:=Hash_File(A_ScriptDir "\res\LICENSE.txt","sha512")
 F:=(FileExist(A_ScriptDir "\res\LICENSE.txt") && (currLicense==script.EL))
 if !F {
     OnMessage(0x44, "MsgBoxCallback3")
@@ -473,6 +473,7 @@ fTraySetup(IconString) {
 #Include, <Base64PNG_to_HICON>
 #include, <ini>
 #Include, <CountFilesR>
+    #Include, <Hash_File>
 #Include, <script>
 #Include, <ttip>
 #Include, <AutoMoveToStick>
