@@ -18,7 +18,7 @@ return
 FindUSBDevice() {
     static
     ttip("Checking Devices...")
-    sleep, zz000
+    sleep, 4000
     if (found) {
         settimer,% A_ThisFunc,off
         i=0

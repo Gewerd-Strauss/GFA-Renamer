@@ -81,10 +81,6 @@ if !script.config.Count() {
     MsgBox 0x40, % script.name " - Initialisation",% "Initialised settings-file. `nThis will keep track of the last data you provided.`n`nThis config-file is located at`n`n'" A_ScriptDir "\res\" A_ScriptName ".ini'`n`nYou can now continue."
     OnMessage(0x44, "")
 }
-
-OnMessage(0x219, "FindUSBDevice")
-out:=FindUSBDevice()
-device_name:=out.device_name
 script.version:=script.config.Config.Version
 ;; setup the GUI.
 yP:=A_ScreenHeight-500
@@ -97,8 +93,8 @@ gui, add, text,, % "Enter Group names, delimited by a comma ','."
 gui, add, edit, vNames w200, % script.config.LastRun.Names
 gui, add, text,, % "Please set the number of pots/plants per group.`nValue must be an integer."
 gui, add, edit, vPlantsPerGroup w200 Number, % script.config.LastRun.PlantsPerGroup
-gui, add, text,vvUsedStick, % "used Stick: " (device_name!=""? "'" device_name "'": "Device '" script.config.config.USB_Stick_Name "' could not be found.") 
 gui, add, Button, gGFARSubmit, &Submit
+;gui, add, text,vvUsedStick, % "used Stick: " (device_name!=""? "'" device_name "'": "Device '" script.config.config.USB_Stick_Name "' could not be found.") 
 gui, add, Button, yp xp+64 gGFARHelp, &Help
 gui, add, Button, yp xp+51 gGFARAbout, &About
 onOpenConfig:=Func("GFARopenConfig").Bind(script.configfile)
