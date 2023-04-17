@@ -1,6 +1,13 @@
 # GFA_Renamer: Utility for renaming consecutive image files based on a set of names
 
-This  is a small utility script written for my internship. Simply drag a folder containing ordered image files - onto the GUI.  
+This  is a small utility script written for my internship. Simply drag a folder containing ordered image files onto the GUI and follow the Instructions.
+
+
+## THE GUI
+
+![GUI Overview](assets/Documentation/GFA_Renamer%20GUI%20Overview.jpg)
+
+
 Then enter the required group names and number of pots per group and confirm your choices. 
 
 The image files in that folder will then be duplicated into a subfolder `GFAR_WD`, wherein they will be renamed according to the information provided.
@@ -12,7 +19,10 @@ The script additionally provides a log file stating
 
 The original files will never be altered directly as a precaution. It is the user's responsibility to decide to delete the original backup files.
 
-## How to deal with missing images
+## How to deal with missing images / NEW
+
+## How to deal with missing images / DEPRECATED
+OUTDATED - WAIT FOR UPDATE
 In cases where a certain group has fewer images than the other - as could be the case if you loose a single pot at some point due to damage - simply copy the image of the previous pot and create a copy.
 
 Example:
