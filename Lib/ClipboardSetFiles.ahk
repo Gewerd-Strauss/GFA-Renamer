@@ -1,4 +1,3 @@
-;#todo: wait for clarification on licensing
 ; --uID:887366420
  ; Metadata:
   ; Snippet: ClipboardSetFiles()
