@@ -394,28 +394,12 @@ GFAR_ExcludeSubmit() {
     ExitApp
     return
 }
-MsgBoxCallback() {
-    DetectHiddenWindows, On
-    Process, Exist
-    If (WinExist("ahk_class #32770 ahk_pid " . ErrorLevel)) {
-        ControlSetText Button1, Continue
     }
     return
 }
-MsgBoxCallback2() {
-    DetectHiddenWindows, On
-    Process, Exist
-    If (WinExist("ahk_class #32770 ahk_pid " . ErrorLevel)) {
-        ControlSetText Button1, Exit Script
     }
     return
 }
-MsgBoxCallback3() {
-    DetectHiddenWindows, On
-    Process, Exist
-    If (WinExist("ahk_class #32770 ahk_pid " . ErrorLevel)) {
-        ControlSetText Button1, OK
-        ControlSetText Button2, Go to Github
     }
 }
 writeFile(Path,Content,Encoding:="",Flags:=0x2,bSafeOverwrite:=false) { 
