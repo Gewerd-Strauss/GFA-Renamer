@@ -98,11 +98,11 @@ gui, add, Button, gGFARSubmit, &Submit
 gui, add, Button, yp xp+64 gGFARHelp, &Help
 gui, add, Button, yp xp+51 gGFARAbout, &About
 onOpenConfig:=Func("GFARopenConfig").Bind(script.configfile)
-gui, add, button,  hwndOpenConfig yp xp+60, &Config
+gui, add, button,  hwndOpenConfig yp xp+58, &Config
 GuiControl, +g,%OpenConfig%, % onOpenConfig
 if !(A_IsCompiled) {
-    gui, add, button, hwndSetTestset yp xp+80, Set Testset
     onSetTestset:=Func("GFARsetTestset").Bind(A_ScriptDir "\assets\Image Test Files","G14,G21,G28,G35,G42,UU",7)
+    gui, add, button, hwndSetTestset yp xp+60, % "Set Testset"
     guicontrol, +g, %SetTestset%, % onSetTestset
 }
 gui, font, s7
