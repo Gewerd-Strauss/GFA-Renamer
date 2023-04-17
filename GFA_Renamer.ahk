@@ -1,8 +1,9 @@
-﻿#Requires AutoHotkey v1.1.36+ ;; version at which script was written.
+#Requires AutoHotkey v1.1.36+ ;; version at which script was written.
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 #SingleInstance,Force
 #MaxHotkeysPerInterval, 99999999
 #Warn All, Outputdebug
+
 ;#Persistent 
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
