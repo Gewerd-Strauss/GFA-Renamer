@@ -92,7 +92,7 @@ xP:=A_ScreenWidth-440
 gui, GFAR: new, +AlwaysOnTop -SysMenu -ToolWindow -caption +Border  +hwndGFAGui
 gui, Font, s10
 gui, add, text,,% "Please drag and drop the folder you want to use on this window.`n`nChosen folder:"
-gui, add, Edit, w400 h110 vFolder disabled, % script.config.LastRun.Folder
+    gui, add, Edit, w400 h110 vFolder disabled, % script.config.LastRun.Folder
 gui, add, text,, % "Enter Group names, delimited by a comma ','."
 gui, add, edit, vNames w200, % script.config.LastRun.Names
 gui, add, text,, % "Please set the number of pots/plants per group.`nValue must be an integer."
@@ -191,7 +191,7 @@ GFARSubmit() {
     LoopCount:=PlantsPerGroup*strsplit(Names,",").Count()
     loop % LoopCount
         Arr.push(repeatElementIofarrayNKtimes(strsplit(Names,","),PlantsPerGroup) " (" repeatIndex(PlantsPerGroup) ")")
-
+            
     ttip(repeatElementIofarrayNKtimes())
     TrueNumberOfFiles:=0
     ImagePaths:=[]
@@ -303,10 +303,10 @@ GFAR_ExcludeInspectSelection() {
     if (TEST_FOLDERPATH!="") {
         InspectedImage:=TEST_FOLDERPATH  Delim  sel2[3] "." script.config.Config.filetype
     } else {
-    InspectedImage:=Folder  Delim sel2[3] "." script.config.Config.filetype
+        InspectedImage:=Folder  Delim  sel2[3] "." script.config.Config.filetype
     run, % InspectedImage
     return
-}
+    }
 f_GetSelectedLVEntries() {
     vRowNum:=0
     sel:=[]
@@ -371,30 +371,30 @@ GFAR_ExcludeSubmit() {
     } else {
         Log:="Expected Number of images: " Arr.Count() "`nFound Number of images: " Arr.Count() "`n"
         Loop, Files, % Folder "\*." script.config.Config.filetype, F
-            {
+        {
                 scriptWorkingDir:=renameFile(A_LoopFileFullPath,Arr[A_Index],true,A_Index,TrueNumberOfFiles)
                 Log.=A_LoopFileFullPath " - " Arr[A_Index] "`n"
                 FilestoCopy.=A_LoopFileFullPath "`n"
             if (TEST_FOLDERPATH!="") {
                 Folder:=TEST_FOLDERPATH
-        }
+            }
         writeFile(scriptWorkingDir "\gfa_renamer_log.txt",Log, "UTF-8-RAW","w",true)
-    }
+            }
     ttip(script.name " - Finished running")
     OnMessage(0x44, "OnMsgBox2")
     MsgBox 0x40, % script.name " -  Script finished",% "The script finished running.`nThe folder containing the renamed images will open once this message box is closed.`n`nA log mapping each image to its new name is given in the file 'gfa_renamer_log.txt' within the output directory 'GFAR_WD'. The original image files are preserved in the original folder."
     OnMessage(0x44, "")
-
-    if (WinExist(scriptWorkingDir " ahk_exe explorer.exe")) {
-        WinActivate
-        return
-    } 
-    Else {
-        run, % scriptWorkingDir
+            
+        if (WinExist(scriptWorkingDir " ahk_exe explorer.exe")) {
+            WinActivate
+            return
+        } 
+        Else {
+            run, % scriptWorkingDir
     }
     ExitApp
     return
-}
+        }
     }
     return
 }
@@ -489,16 +489,19 @@ fTraySetup(IconString) {
 
 
 
-#Include, <Base64PNG_to_HICON>
-#include, <ini>
+;DN |N  |H
+;#Include, <AutoMoveToStick>
+        #Include, <Base64PNG_to_HICON>
 #Include, <Cleanup>
+        #Include, <ClipboardSetFiles>
 #Include, <CountFilesR>
+#Include, <ForceOrder>
     #Include, <Hash_File>
+    #include, <ini>
+#Include, <MessageBoxes>
+#Include, <Object_HashmapHash>
 #Include, <script>
+        #Include, <StdErr_Write>
+#Include, <StringifyObject>
 #Include, <TestDataset>
 #Include, <ttip>
-#Include, <AutoMoveToStick>
-#Include, <ClipboardSetFiles>
-#Include, <Object_HashmapHash>
-
-
