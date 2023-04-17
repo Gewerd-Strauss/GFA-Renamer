@@ -216,7 +216,8 @@ GFARSubmit() {
     gui, add, Listview, gGFAR_ExcludeInspectSelection Checked vvLV_SelectedEntries w700 R30 +ReadOnly , Name | Expected Filepath
     f_UpdateLV(Arr,ImagePaths)
     gui, add, text,, % "Images/Names: (" ImagePaths.Count() "/" Arr.Count() ")"
-    gui, add, Button, gGFAR_ExcludeSubmit, &Continue
+    gui, add, Button, gGFAR_DuplicatetoShiftFrame vvGFAR_DuplicatetoShiftFrame disabled, &Duplicate to shift frame
+    gui, add, Button,yp xp+170 vvGFAR_ExcludeSubmitButton gGFAR_ExcludeSubmit, &Continue
     GFAR_LastImage:=Func("GFAR_ExcludeOpenPath").Bind(ImageF)
     gui, add, Button, yp xp+80 hwndGFAR_ExcludeOpenLastImage,Open &Last image
     GuiControl, +g, %GFAR_ExcludeOpenLastImage%, % GFAR_LastImage
@@ -225,12 +226,49 @@ GFARSubmit() {
     gui, add, Button, yp xp+130 hwndGFAR_ExcludeOpenFolder,Open &Folder
     GuiControl, +g, %GFAR_ExcludeOpenFolder%, % GFAR_OpenFolder
     ;gui, add, Button, yp xp+80 gGFAR_ExcludeAbort
-    
+    if (ImagePaths.Count()<Arr.Count()) {
+        guicontrol, GFAR_Exclude: Disable,vGFAR_ExcludeSubmitButton
+        guicontrol, GFAR_Exclude: Enable,vGFAR_DuplicatetoShiftFrame
+    } else {
+        guicontrol, GFAR_Exclude: Enable,vGFAR_ExcludeSubmitButton
+        guicontrol, GFAR_Exclude: Disable,vGFAR_DuplicatetoShiftFrame
+    }
     gui, GFAR_Exclude: show, AutoSize,% "Exclude Names"
     WinWaitClose, % "Exclude Names"
     return
 }
 
+GFAR_DuplicatetoShiftFrame() {
+    global
+    static SourceImagesToDelete:=[]
+
+    sel:=f_GetSelectedLVEntries()
+    sel2:=strsplit(sel[1],"||")
+    Delim:=(SubStr(Folder, -1 )!="\"?"\":"")
+    if (TEST_FOLDERPATH!="") {
+        InspectedImage:=TEST_FOLDERPATH  Delim  sel2[3] "." script.config.Config.filetype
+        Padding_Name:=TEST_FOLDERPATH Delim sel2[3] " (padding)." script.config.Config.filetype
+    } else {
+        InspectedImage:=Folder  Delim  sel2[3] "." script.config.Config.filetype
+        Padding_Name:=Folder  Delim sel2[3] " (padding)." script.config.Config.filetype
+    }
+    FileCopy, % InspectedImage,% Padding_Name, 0
+    
+    ;; Arr
+    ;; ImagePaths
+    Position_Original:=HasVal(ImagePaths,InspectedImage)
+    Position_Duplicate:=Position_Original
+    LV_Insert(Position_Duplicate, "Check", sel2[2] " (blank)", sel2[3] " (padding)")
+    SourceImagesToDelete.push(Position_Duplicate) ; todo:: this does not work for mapping which files are padded and which are not. (just delete all files containing '(padding)' instead?)
+    if (ImagePaths.Count()=Arr.Count()) {
+        guicontrol, GFAR_Exclude: enable,vGFAR_ExcludeSubmitButton
+    } else {
+        GFAR_ExcludeEscape()
+        sleep, 200
+        GFARSubmit()
+    }
+    return SourceImagesToDelete
+}
 
 f_UpdateLV(Array,Array2) { 
     ; updates the selected LV. LV MUST BE SELECTED BEFORE.
