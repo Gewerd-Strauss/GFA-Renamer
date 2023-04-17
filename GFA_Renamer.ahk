@@ -472,6 +472,7 @@ fTraySetup(IconString) {
 
 #Include, <Base64PNG_to_HICON>
 #include, <ini>
+#Include, <CountFilesR>
 #Include, <script>
 #Include, <ttip>
 #Include, <AutoMoveToStick>
