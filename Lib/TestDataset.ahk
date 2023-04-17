@@ -2,7 +2,76 @@ lp:=generateTestDataset()
 ;lp:="D:\Dokumente neu\000 AAA Dokumente\000 AAA HSRW\General\AHK scripts\Projects\GFA_Renamer\Lib\Test\tmp.zip"
 Unz(lp,A_ScriptDir . "\Test\")
 return
+setTestset(Folder,Names,PlantsPerGroup) {
+    ; if (!FileExist(A_ScriptDir "\assets\Image Test Files")) {
+        ttip("Validating Internet connection for download...",5)
+        sleep, 1200
+        if (script.requiresInternet(,true)) {
+            if !FileExist(A_ScriptDir "\assets\Image Test Files Source\tmp.zip") { ;; zipped source folder does not exist, download it again from the public repo.
+                ttip("Downloading Set of Test-Images...",5)
+                lp:=generateTestDataset(script.config.TestSet.URL,A_ScriptDir "\assets\Image Test Files Source\") ;; download the data
+                sleep, 1200
+            } else {
 
+                lp:=A_ScriptDir "\assets\Image Test Files Source\tmp.zip"
+            }
+            ttip("Confirming checksum")
+            OldHash:=script.config.TestSet.Hash
+            Clipboard:=NewHash:=Hash_File(lp,"sha512")
+            bIsAuthor:=(script.computername=script.authorID)
+            if (OldHash!=NewHash){
+                MsgBox 0x42034,% script.name " - Test Dataset Validation failed - checksums differ" , Notice:`n`nThe file-validation failed on the downloaded zip directory containing the example files.`n`n`nThis is not necessarily wrong or bad`, but should be known. `n`nDid you change the remote file to download from (see config file -> TestSet -> URL)?`n`n`n`nIf this is intended`, press okay to confirm the new file. If not`, presss continue to use this unvalidated set without confirming it.`n`nConfirming it will check against this files' checksum when downloading the testset in the future. THerefore`, if you want to use your own testset and set it in the config file`, you should confirm this messagebox if it came up afterwards.
+
+                IfMsgBox Yes, {
+                    script.config.TestSet.Hash:=NewHash
+                    script.save()
+                } Else IfMsgBox No, {
+                }
+                
+            }
+            ttip("Unpacking Testset...",5)
+            if FileExist(test_folder "\About this gist.nd") {
+                FileDelete, % test_folder "\About this gist.nd"
+            }
+            ret:=Unz(strreplace(lp,"\\","\"),test_folder:=A_ScriptDir "\assets\Image Test Files") ; unpack it.
+            OutputDebug, % test_folder
+        } else {
+            Text := "No connection could be established, the application is unable to download the Testset.`n`n`nPlease try again after solving the connection issues.`nThe application will exit now."
+
+            Result := MsgBoxEx(Text, "script.name "" - No Internet connection""", "OK", 4)
+
+            If (Result == "OK") {
+                ExitApp,
+            } Else If (Result == "Cancel") {
+                ExitApp,
+            }
+
+
+
+        }
+    ; }
+
+    ;; clean up the testset.
+    FileRecycle, % A_ScriptDir "\assets\Image Test Files\GFAR_WD"
+    Loop, Files, % Folder "\*." script.config.Config.filetype, FR
+    {
+        if InStr(A_LoopFileFullPath,"(padding)") {
+            FileRecycle, % A_LoopFileFullPath
+            continue
+        }
+    }
+
+    guicontrol, GFAR:, Folder, % Folder
+    guicontrol, GFAR:, Names, % Names
+    guicontrol, GFAR:, PlantsPerGroup, % PlantsPerGroup
+    guicontrol, GFAR:, CHSNFLDR_STRING, % "Chosen Folder:" A_Tab A_Tab "(TESTMODE)"
+    guicontrol, GFAR: enable,SubmitButton
+    sleep, 1200
+    ttip("Set test-set. Settings made in this run of the script will not be saved for next time!!")
+    script.config.Config.LastRun.Sync(false)
+    bTestSet:=true
+    return
+}
 generateTestDataset(URL:="https://gist.github.com/Gewerd-Strauss/d944d8abc295253ced401493edd377f2/archive/0d46c65c3993b1e8eef113776b68190e0802deb5.zip",local_path:="") {
     if (local_path="") {
         local_path:=A_ScriptDir "\Test"
@@ -15,9 +84,10 @@ generateTestDataset(URL:="https://gist.github.com/Gewerd-Strauss/d944d8abc295253
     }
     if !Instr(FileExist(local_path),"D")
         FileCreateDir, % local_path
-    OutputDebug, % URL "`n`n`n" local_path (SubStr(local_path,0,1)="\"?"":"\") "tmp.zip"
+    OutputDebug, % "`Downloading`n>" A_Tab URL "`n`nto`n`n>" A_Tab local_path (SubStr(local_path,0,1)="\"?"":"\") "tmp.zip"
     
-    UrlDownloadToFile, % URL, % out:=local_path "\tmp.zip"
+    UrlDownloadToFile, % URL, % out:=local_path (SubStr(local_path,0,1)="\"?"":"\") "tmp.zip"
+    EL:=ErrorLevel
     if FileExist(out) {
         return out
     } else {

@@ -51,6 +51,8 @@ script := {base         : script.base
                     ,configfolder : A_ScriptDir "\res"
                     ,license      : A_ScriptDir "\res\LICENSE.txt"}
 currLicense:=Hash_File(A_ScriptDir "\res\LICENSE.txt","sha512")
+global bTestSet:=false
+global TEST_FOLDERPATH:=false
 F:=(FileExist(A_ScriptDir "\res\LICENSE.txt") && (currLicense==script.EL))
 if !F {
     OnMessage(0x44, "MsgBoxCallback3")
@@ -101,8 +103,8 @@ onOpenConfig:=Func("GFARopenConfig").Bind(script.configfile)
 gui, add, button,  hwndOpenConfig yp xp+58, &Config
 GuiControl, +g,%OpenConfig%, % onOpenConfig
 if !(A_IsCompiled) {
-    onSetTestset:=Func("GFARsetTestset").Bind(A_ScriptDir "\assets\Image Test Files","G14,G21,G28,G35,G42,UU",7)
     gui, add, button, hwndSetTestset yp xp+60, % "Set Testset"
+    onSetTestset:=Func("setTestset").Bind(A_ScriptDir "\assets\Image Test Files",script.config.Testset.Names,script.config.Testset.PlantsPerGroup)
     guicontrol, +g, %SetTestset%, % onSetTestset
 }
 gui, font, s7
@@ -116,16 +118,7 @@ Esc::GFAR_ExcludeEscape()
 #if ;; end the hotkey-conditions
 
 ;; Set the settings for the test-set files in the program's own directory.
-GFARsetTestset(Folder,Names,PlantsPerGroup) {
-    FileRemoveDir, % A_ScriptDir "\assets\Image Test Files\GFAR_WD", 1
-    guicontrol, GFAR:, Folder, % Folder
-    guicontrol, GFAR:, Names, % Names
-    guicontrol, GFAR:, PlantsPerGroup, % PlantsPerGroup
-    
-    ttip("Set test-set. Settings made in this run of the script will not be saved for next time!!")
-    script.config.Config.LastRun.Sync(false)
-    return
-}
+
 ;; receive the GuiDropFiles_message
 GFARGuiDropFiles(GuiHwnd, FileArray, CtrlHwnd, X, Y) { 
     Count:=0
@@ -200,12 +193,17 @@ GFARSubmit() {
     ttip(repeatElementIofarrayNKtimes())
     TrueNumberOfFiles:=0
     ImagePaths:=[]
-    Loop, Files, % Folder "\*." script.config.Config.filetype, F
+    
+    opt:=(bTestSet?"FR":"F")
+    
+    Loop, Files, % Folder "\*." script.config.Config.filetype, % opt
     {
         ImageF:=A_LoopFileFullPath
         TrueNumberOfFiles++
         ImagePaths.Push(A_LoopFileFullPath)
-
+        if (A_Index=1) {
+            TEST_FOLDERPATH:=A_LoopFileDir
+        }
     }
     str:="Number of Images that would be renamed given the settings provided: "  Arr.Count() "`nFound number of images: " TrueNumberOfFiles "`n"
     Files:=str
@@ -298,6 +296,9 @@ GFAR_ExcludeInspectSelection() {
     sel:=f_GetSelectedLVEntries()
     sel2:=strsplit(sel[1],"||")
     Delim:=(SubStr(Folder, -1 )!="\"?"\":"")
+    if (TEST_FOLDERPATH!="") {
+        InspectedImage:=TEST_FOLDERPATH  Delim  sel2[3] "." script.config.Config.filetype
+    } else {
     InspectedImage:=Folder  Delim sel2[3] "." script.config.Config.filetype
     run, % InspectedImage
     return
@@ -352,6 +353,9 @@ GFAR_ExcludeSubmit() {
         FilestoCopy:=""
         for Sel_Index,Sel_String in Sel     ;; iterate over all entries that we left checked. These will be renamed based on the Entries of the Listview - the name displayed will be applied to the respectively displayed filename
         {
+            if (TEST_FOLDERPATH!="") {
+                Folder:=TEST_FOLDERPATH
+            }
             Sel_Arr:=strsplit(Sel_String,"||")
             Delim:=(SubStr(Folder, -1 )!="\"?"\":"")
             RenamedImage:=Folder  Delim Sel_Arr[3] "." script.config.Config.filetype
@@ -367,6 +371,8 @@ GFAR_ExcludeSubmit() {
                 scriptWorkingDir:=renameFile(A_LoopFileFullPath,Arr[A_Index],true,A_Index,TrueNumberOfFiles)
                 Log.=A_LoopFileFullPath " - " Arr[A_Index] "`n"
                 FilestoCopy.=A_LoopFileFullPath "`n"
+            if (TEST_FOLDERPATH!="") {
+                Folder:=TEST_FOLDERPATH
         }
         writeFile(scriptWorkingDir "\gfa_renamer_log.txt",Log, "UTF-8-RAW","w",true)
     }
@@ -500,6 +506,7 @@ fTraySetup(IconString) {
 #Include, <CountFilesR>
     #Include, <Hash_File>
 #Include, <script>
+#Include, <TestDataset>
 #Include, <ttip>
 #Include, <AutoMoveToStick>
 #Include, <ClipboardSetFiles>
