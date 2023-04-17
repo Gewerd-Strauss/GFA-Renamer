@@ -18,6 +18,7 @@ ModDate:=SubStr(ModDate,7,  2) "." SubStr(ModDate,5,2) "." SubStr(ModDate,1,4)
 global script := new script()
 script := {base         : script.base
                     ,name         : regexreplace(A_ScriptName, "\.\w+")
+                    ,Computername : A_ComputerName
                     ,version      : ""
                     ,author       : "Gewerd Strauss"
                     ,authorID	  : "Laptop-C"
