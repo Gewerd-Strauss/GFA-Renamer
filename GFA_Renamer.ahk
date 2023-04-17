@@ -346,20 +346,6 @@ GFAR_ExcludeSubmit() {
     ExitApp
     return
 }
-compareTimestamp(File) {
-    static lastCT:=""
-    bool:=false
-    FileGetTime, CT, % FIle, C
-    FileGetTime, MT, % FIle, M
-    if (lastCT="")
-        lastCT:=CT
-    else {
-
-        Diff:=CT-lastCT
-    }
-    ttip("prep a double image by the auslöser for testing here!")
-    return bool
-}
 MsgBoxCallback() {
     DetectHiddenWindows, On
     Process, Exist
