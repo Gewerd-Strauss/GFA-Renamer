@@ -217,6 +217,8 @@ GFARSubmit() {
     gui, add, text,,% "Please UNTICK any name you do not have an image for (at that position).`nNotes:`n - Files are not actually skipped. Instead, by unticking a row you prevent the name of a pot that you don't have an image`nof from being applied to the 'next-in-line' image.)`n - Double-click an entry in this list to view the image"
     gui, add, Listview, gGFAR_ExcludeInspectSelection Checked vvLV_SelectedEntries w700 R30 +ReadOnly , Name | Expected Filepath
     f_UpdateLV(Arr,ImagePaths)
+    ;Arr2:=ForceOrder(Arr)
+    ImagePaths2:=ForceOrder(ImagePaths)
     gui, add, text,, % "Images/Names: (" ImagePaths.Count() "/" Arr.Count() ")"
     gui, add, Button, gGFAR_DuplicatetoShiftFrame vvGFAR_DuplicatetoShiftFrame disabled, &Duplicate to shift frame
     gui, add, Button,yp xp+170 vvGFAR_ExcludeSubmitButton gGFAR_ExcludeSubmit, &Continue
