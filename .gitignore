@@ -11,3 +11,4 @@ assets/Documentation/*.rmd
 assets/Documentation/*.md
 assets/Documentation/*.ahk
 **/Dev/
+GFA_Renamer.ini
