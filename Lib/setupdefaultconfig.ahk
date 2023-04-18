@@ -34,6 +34,10 @@ setupdefaultconfig() {
     [LastRun]
     ;; reserved, will be autopopulatd.
     )
+    if !FileExist(script.configfile) {
+        writeFile(script.configfile,DefaultConfig,"UTF-8","w",true)
+        return
+    }
     MsgBox 0x2024, script.name " - Restore default config", Do you want to restore the default config supplied with this program?`n`nBe aware that all settings you altered will be reset and may have to be edited again.`n`nNo backup of your old configuration will be made`n`nRestore?
 
     IfMsgBox Yes, {
