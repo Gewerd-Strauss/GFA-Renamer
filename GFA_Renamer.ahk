@@ -557,10 +557,14 @@ fTraySetup(IconString) {
     Menu, Tray, Icon
     f:=Func("setupdefaultconfig")
     Menu, Tray, Add, Restore default config, % f
+    f2:=Func("reload")
+    menu, tray, Add, Reload, % f2
     DllCall( "DestroyIcon", "Ptr",hICON  )                ; Destroy original HICON
     return
 }
-
+reload() {
+    reload
+}
 
 
 
