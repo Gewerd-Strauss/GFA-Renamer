@@ -1,4 +1,4 @@
-#Requires AutoHotkey v1.1.36+ ;; version at which script was written.
+#Requires AutoHotkey v1.1.35+ ;; version at which script was written.
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 #SingleInstance,Force
 #MaxHotkeysPerInterval, 99999999
@@ -121,11 +121,11 @@ gui, add, Button, yp xp+51 gGFARAbout, &About
 onOpenConfig:=Func("GFARopenConfig").Bind(script.configfile)
 gui, add, button,  hwndOpenConfig yp xp+58, &Config
 GuiControl, +g,%OpenConfig%, % onOpenConfig
-if !(A_IsCompiled) {
+; if !(A_IsCompiled) {
     gui, add, button, hwndSetTestset yp xp+60, % "Set Testset"
     onSetTestset:=Func("setTestset").Bind(A_ScriptDir "\assets\Image Test Files",script.config.Testset.Names,script.config.Testset.PlantsPerGroup)
     guicontrol, +g, %SetTestset%, % onSetTestset
-}
+; }
 gui, font, s7
 gui, add, text,yp+20 x350,% "v." script.version " by ~Gw"
 gui, GFAR: show, w430  x%xP%  y%yP%  ,% "Drop folder with images on this window"

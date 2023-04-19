@@ -99,6 +99,8 @@ downloadTestset(URL:="https://gist.github.com/Gewerd-Strauss/d944d8abc295253ced4
     
     UrlDownloadToFile, % URL, % out:=local_path (SubStr(local_path,0,1)="\"?"":"\") "tmp.zip"
     EL:=ErrorLevel
+    if EL
+        msgbox, % EL    
     if FileExist(out) {
         return out
     } else {

@@ -39,17 +39,20 @@ Cleanup() {
             FileRecycle, % A_LoopFileFullPath
             Ind2:=A_Index
         }
+        CleanupLoops:=0
         loop,
         {
+            CleanupLoops++
             suff:=[".","..","..."]
             suff_ind += (suff_ind=3?-2:1)
-
+            if (script.config.config.CopyFilesInsteadOfCuttingThem) { ;; if the files are copied, the GFAR_WD is never emptied, thus we cannot remove it - that's the point of copying, I suppose.
+                break
+            }
             ttip("Cleanup" suff[suff_ind],5)
             sleep, 1200
             FilesLeftInDownloadUnpack:=0
             FilesLeftInDownloadUnpack:=CountFilesR(A_ScriptDir "\assets\Image Test Files",A_Index)
-            ttip(FilesLeftInDownloadUnpack)
-             if (FilesLeftInDownloadUnpack<=1) { ;; because the AboutThisGist.md file is never removed, the threshold is at least 1, not 0.
+             if (FilesLeftInDownloadUnpack<=1)  { ;; because the AboutThisGist.md file is never removed, the threshold is at least 1, not 0.
                 FileRecycle, % A_ScriptDir "\assets\Image Test Files" ;;TODO: change this to skip when GFAR_WD is not empty - check if there are files in there via the second continual condition in the loop above
                 break
             }
