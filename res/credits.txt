@@ -1,12 +1,18 @@
-  SKAN            -       Base64PNG_to_HICON, regarding licensing                             - https://www.autohotkey.com/boards/viewtopic.php?f=6&t=36636, https://www.autohotkey.com/board/topic/75906-about-my-scripts-and-snippets/
-  just me         -       ClipboardSetFiles                                                   - https://www.autohotkey.com/boards/viewtopic.php?p=63914#p63914
+SKAN            -       Base64PNG_to_HICON, regarding licensing                             - https://www.autohotkey.com/boards/viewtopic.php?f=6&t=36636, https://www.autohotkey.com/board/topic/75906-about-my-scripts-and-snippets/
+                        cleanup
+just me         -       ClipboardSetFiles (considered PD by author)                                                   - https://www.autohotkey.com/boards/viewtopic.php?p=63914#p63914
+                        CountFiles
+                        ForceOrder
 anonymous1184   -       Hash_File.ahk, License (waiting for explicit file to be added)      - https://gist.github.com/anonymous1184/737749e83ade98c84cf619aabf66b063,https://gist.github.com/anonymous1184/737749e83ade98c84cf619aabf66b063?permalink_comment_id=4525104#gistcomment-4525104
-  icons8          -       Icon                                                                - https://icons8.com/icon/Ou81cXLcsZzX/potted-plant"
+icons8          -       Icon                                                                - https://icons8.com/icon/Ou81cXLcsZzX/potted-plant"
 anonymous1184   -       Ini.ahk, License (waiting for explicit file to be added)            - https://gist.github.com/anonymous1184/737749e83ade98c84cf619aabf66b063,https://gist.github.com/anonymous1184/737749e83ade98c84cf619aabf66b063?permalink_comment_id=4525104#gistcomment-4525104
-Gewerd Strauss  -       main script
+                        MessageBoxes
+                        Object_HashmapHash
 Gewerd Strauss  -       partial, self-written subset of ScriptObj                           - https://github.com/Gewerd-Strauss/ScriptObj/blob/master/ScriptObj.ahk
-Gewerd Strauss  -       Set of Test images                                                  - https://gist.github.com/Gewerd-Strauss/d944d8abc295253ced401493edd377f2 
-  Lexikos         -       StdErr_Write, regarding license                                                        - http://www.autohotkey.com/board/topic/50306-can-a-script-write-to-stderr/?hl=errorstdout#entry314658, https://www.autohotkey.com/board/topic/36032-lexikos-default-copyright-license/
+                        setupdefaultconfig
+Lexikos         -       StdErr_Write, regarding license                                     - http://www.autohotkey.com/board/topic/50306-can-a-script-write-to-stderr/?hl=errorstdout#entry314658, https://www.autohotkey.com/board/topic/36032-lexikos-default-copyright-license/
 Gewerd Strauss  -       StringifyObject
-Gewerd Strauss  -       ttip                                                                -   https://gist.github.com/Gewerd-Strauss/fad218c28b8120ab1a3cadea1a8dea9b
-author2,author3 -       snippetName1                                                        -	URL2,URL3
+                        TestDataset
+Gewerd Strauss  -       main script
+Gewerd Strauss  -       Set of Test images, Testset-ingestion                               - https://gist.github.com/Gewerd-Strauss/d944d8abc295253ced401493edd377f2 
+Gewerd Strauss  -       ttip                                                                - https://gist.github.com/Gewerd-Strauss/fad218c28b8120ab1a3cadea1a8dea9b
