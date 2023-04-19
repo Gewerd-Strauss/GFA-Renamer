@@ -569,7 +569,6 @@ reload() {
 
 
 ;DN |N  |H
-;#Include, <AutoMoveToStick>
         #Include, <Base64PNG_to_HICON>
 #Include, <Cleanup>
         #Include, <ClipboardSetFiles>
