@@ -1,20 +1,16 @@
-lp:=generateTestDataset()
-;lp:="D:\Dokumente neu\000 AAA Dokumente\000 AAA HSRW\General\AHK scripts\Projects\GFA_Renamer\Lib\Test\tmp.zip"
-Unz(lp,A_ScriptDir . "\Test\")
-return
-setTestset(Folder,Names,PlantsPerGroup) {
-    ; if (!FileExist(A_ScriptDir "\assets\Image Test Files")) {
+setTestset(Folder,Names:="",PlantsPerGroup:="") {
+    ttip("Looking for testset data folder",5)
+    sleep, 1200
+    if !FileExist(A_ScriptDir "\assets\Image Test Files Source\tmp.zip") { ;; zipped source folder does not exist, download it again from the public repo.
         ttip("Validating Internet connection for download...",5)
         sleep, 1200
         if (script.requiresInternet(,true)) {
-            if !FileExist(A_ScriptDir "\assets\Image Test Files Source\tmp.zip") { ;; zipped source folder does not exist, download it again from the public repo.
-                ttip("Downloading Set of Test-Images...",5)
-                lp:=generateTestDataset(script.config.TestSet.URL,A_ScriptDir "\assets\Image Test Files Source\") ;; download the data
-                sleep, 1200
-            } else {
+            ttip("Downloading Set of Test-Images...",5)
+            lp:=downloadTestset(script.config.TestSet.URL,A_ScriptDir "\assets\Image Test Files Source\") ;; download the data
+            sleep, 1200
 
-                lp:=A_ScriptDir "\assets\Image Test Files Source\tmp.zip"
-            }
+
+            
             ttip("Confirming checksum")
             OldHash:=script.config.TestSet.Hash
             Clipboard:=NewHash:=Hash_File(lp,"sha512")
@@ -29,12 +25,7 @@ setTestset(Folder,Names,PlantsPerGroup) {
                 }
                 
             }
-            ttip("Unpacking Testset...",5)
-            if FileExist(test_folder "\About this gist.nd") {
-                FileDelete, % test_folder "\About this gist.nd"
-            }
-            ret:=Unz(strreplace(lp,"\\","\"),test_folder:=A_ScriptDir "\assets\Image Test Files") ; unpack it.
-            OutputDebug, % test_folder
+            
         } else {
             Text := "No connection could be established, the application is unable to download the Testset.`n`n`nPlease try again after solving the connection issues.`nThe application will exit now."
 
@@ -49,10 +40,30 @@ setTestset(Folder,Names,PlantsPerGroup) {
 
 
         }
+
+
+        
+    } else {
+
+        lp:=A_ScriptDir "\assets\Image Test Files Source\tmp.zip"
+    }
+
+    ttip("Unpacking Testset...",5)
+    ret:=Unz(strreplace(lp,"\\","\"),test_folder:=A_ScriptDir "\assets\Image Test Files") ; unpack it.
+    OutputDebug, % test_folder
+    Loop, Files, % test_folder "\*.md", FR ;; remove the "about-this-gist.md"-file
+    {
+        FileDelete, % A_LoopFileFullPath
+    }
+
+        
+        
     ; }
 
     ;; clean up the testset.
-    FileRecycle, % A_ScriptDir "\assets\Image Test Files\GFAR_WD"
+    if (Instr(FileExist(A_ScriptDir "\assets\Image Test Files\GFAR_WD"),"D")) {
+        FileRecycle, % A_ScriptDir "\assets\Image Test Files\GFAR_WD"
+    }
     Loop, Files, % Folder "\*." script.config.Config.filetype, FR
     {
         if InStr(A_LoopFileFullPath,"(padding)") {
@@ -72,7 +83,7 @@ setTestset(Folder,Names,PlantsPerGroup) {
     bTestSet:=true
     return
 }
-generateTestDataset(URL:="https://gist.github.com/Gewerd-Strauss/d944d8abc295253ced401493edd377f2/archive/0d46c65c3993b1e8eef113776b68190e0802deb5.zip",local_path:="") {
+downloadTestset(URL:="https://gist.github.com/Gewerd-Strauss/d944d8abc295253ced401493edd377f2/archive/0d46c65c3993b1e8eef113776b68190e0802deb5.zip",local_path:="") {
     if (local_path="") {
         local_path:=A_ScriptDir "\Test"
     }
@@ -133,3 +144,5 @@ Unz(sZip, sUnz)
     ToolTip
 }
 ;; ----------- 	END FUNCTIONS   -------------------------------------
+;#Include, <Hash_File>
+;#Include, <Messageboxes>
