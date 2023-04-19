@@ -165,7 +165,7 @@ class script {
                         CreditsAssembly:="credits for used code:<br>`n"
                         for Author,v in credits
                         {
-                            if (k="")
+                            if (Author="")
                                 continue
                             if (strsplit(v,"|").2="")
                                 CreditsAssembly.="<p>" Author " - " strsplit(v,"|").1 "`n`n"
