@@ -3,6 +3,7 @@
   ; Snippet: ClipboardSetFiles()
   ; --------------------------------------------------------------
   ; Author: just me
+  ; License: Unlicense
   ; Source: https://www.autohotkey.com/boards/viewtopic.php?p=63914#p63914
   ; (26.12.2015)
   ; --------------------------------------------------------------
@@ -17,7 +18,10 @@
   ;; Explorer function for Drag&Drop and Pasting. Enables the explorer paste context menu option.
   ;; 
   ;; 
-
+  ;; regarding license: even though he hasn't published anything to the regard, in a direct 
+  ;; message on the ahk forums on 13.04.2023 he stated that unless stated otherwhise, his code
+  ;; published on the forums is in the public domain under the Unlicense -> https://unlicense.org/
+  
  ;;; Example:
   ;;; #NoEnv
   ;;; ; Retrieve files in a certain directory sorted by modification date:
