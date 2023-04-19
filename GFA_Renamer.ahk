@@ -77,7 +77,6 @@ script.setIcon("iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAAAXNSR0IArs4c6QAA
 script.update()
 if !FileExist(script.configfile) {
     setupdefaultconfig()
-    
 }
 script.config:=ini(script.configfile)
 
@@ -221,8 +220,8 @@ GFARSubmit() {
     ImagePaths:=[]
     
     opt:=(bTestSet?"FR":"F")
-    
-    Loop, Files, % Folder "\*." script.config.Config.filetype, % opt
+    query:=Folder "\*." script.config.Config.filetype
+    Loop, Files, % query, % opt
     {
         if (InStr(A_LoopFileDir,"GFAR_WD")) {
             continue
@@ -236,9 +235,14 @@ GFARSubmit() {
     }
     str:="Number of Images that would be renamed given the settings provided: "  Arr.Count() "`nFound number of images: " TrueNumberOfFiles "`n"
     Files:=str
-
-
-
+    /*
+    Think aobut what should happen if you have less images than names - this makes the GUI unfitting for renaming, 
+    cuz you'd have to recursively look at every image to verify its name, then recurse to exclude names from the array
+    until you have them all line up again.
+    */
+    if (ImagePaths.Count() > Arr.Count()) {
+        msgbox, % "Critical error: you have more images than names available"
+    }
     gui, GFAR_Exclude: new, +AlwaysOnTop  -SysMenu -ToolWindow -caption +Border  +hwndGFAR_ExcludeGui
     gui, GFAR_Exclude: +OwnerGFAR
     gui, GFAR: +disabled
@@ -408,6 +412,7 @@ GFAR_ExcludeSubmit() {
     }
     FilestoCopy.=logfile "`n"
     if (script.config.Config.PutFilesOnClipboardForPastingToStick) {
+        if (script.config.Config.CopyFilesInsteadOfCuttingThem)
         if !ClipboardSetFiles(FilestoCopy,"Move") {
             StdErr_Write(A_LineNumber, "ClipboardSetFiles was unable to put the renamed images to the clipboard.", spec = FilestoCopy)
             
@@ -530,7 +535,7 @@ repeatElementIofarrayNKtimes(array:="",repetitions:="",bDebug:=true,resetCallInd
         OutputDebug % "Calls (K-iterations): " k "`n"
     }
     site := sites[position]
-    OutputDebug % callIndex    site " - "
+    OutputDebug % callIndex " "   site " - "
 
     callIndex++ ; Increment `callIndex`, meaning that we made a new call to the function
     modResult := Mod(callIndex, k)
