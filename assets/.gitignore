@@ -1,0 +1,9 @@
+Dev
+Image Test Files/**
+Image Test Files Source/**
+Image Test Files
+Dev/**
+Documentation/*.rmd
+Documentation/*.md
+Documentation/*.ahk
+*.JPG

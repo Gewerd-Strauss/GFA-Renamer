@@ -3,12 +3,8 @@
 *.txt
 *.zip
 **/d944d8abc295253ced401493edd377f2-main
-assets/Image Test Files/**
-assets/Image Test Files Source/**
-assets/Image Test Files
-assets/Image Test Files
-assets/Documentation/*.rmd
-assets/Documentation/*.md
-assets/Documentation/*.ahk
-**/Dev/
+**/Dev/**
+
 GFA_Renamer.ini
+**/ext/
+**/Test/
