@@ -7,7 +7,7 @@ Cleanup() {
     GFAR_Count:=Ind1:=Ind2:=0
     if FileExist(ImageSources:=A_ScriptDir "\assets\Image Test Files") {
         LoopQuery:=ImageSources "\*." script.config.Config.filetype
-        
+
         Loop, Files, % LoopQuery, FR ;; do not use recurse because the user might not have copied their testset elsewhere for inspection
         {
             if InStr(Clipboard,A_LoopFileName) {
@@ -52,11 +52,11 @@ Cleanup() {
             sleep, 1200
             FilesLeftInDownloadUnpack:=0
             FilesLeftInDownloadUnpack:=CountFilesR(A_ScriptDir "\assets\Image Test Files",A_Index)
-             if (FilesLeftInDownloadUnpack<=1)  { ;; because the AboutThisGist.md file is never removed, the threshold is at least 1, not 0.
+            if (FilesLeftInDownloadUnpack<=1) { ;; because the AboutThisGist.md file is never removed, the threshold is at least 1, not 0.
                 FileRecycle, % A_ScriptDir "\assets\Image Test Files" ;;TODO: change this to skip when GFAR_WD is not empty - check if there are files in there via the second continual condition in the loop above
                 break
             }
-            
+
         }
     }
     ttip("Cleanup normal Test Files",5)
