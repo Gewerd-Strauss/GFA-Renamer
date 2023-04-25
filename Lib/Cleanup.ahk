@@ -45,7 +45,7 @@ Cleanup() {
             CleanupLoops++
             suff:=[".","..","..."]
             suff_ind += (suff_ind=3?-2:1)
-            if (script.config.config.CopyFilesInsteadOfCuttingThem) { ;; if the files are copied, the GFAR_WD is never emptied, thus we cannot remove it - that's the point of copying, I suppose.
+            if (script.config.config.CopyFiles) { ;; if the files are copied, the GFAR_WD is never emptied, thus we cannot remove it - that's the point of copying, I suppose.
                 break
             }
             ttip("Cleanup" suff[suff_ind],5)

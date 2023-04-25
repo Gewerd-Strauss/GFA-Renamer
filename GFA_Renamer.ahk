@@ -396,11 +396,10 @@ GFAR_ExcludeSubmit() {
         writeFile(logfile:=scriptWorkingDir "\__gfa_renamer_log.txt",Log LogBody, "UTF-8-RAW","w",true)
     }
     FilestoCopy.=logfile "`n"
-    if (script.config.Config.PutFilesOnClipboardForPastingToStick) {
-        if (script.config.Config.CopyFilesInsteadOfCuttingThem)
+    if (script.config.Config.PutFilesOnClipboard) {
+        if (script.config.Config.CopyFiles)
             if !ClipboardSetFiles(FilestoCopy,"Move") {
                 StdErr_Write(A_LineNumber, "ClipboardSetFiles was unable to put the renamed images to the clipboard.", spec = FilestoCopy)
-            
             }
     } else {
         if (WinExist(scriptWorkingDir " ahk_exe explorer.exe")) {
@@ -414,7 +413,7 @@ GFAR_ExcludeSubmit() {
     ttip(script.name " - Finished running")
     OnMessage(0x44, "OnMsgBox2")
     FinalInfoBox_String:="The script finished running.`n"
-    FinalInfoBox_String.= (script.config.Config.PutFilesOnClipboardForPastingToStick)
+    FinalInfoBox_String.= (script.config.Config.PutFilesOnClipboard)
         ? "The renamed image files are now ready to be pasted into whatever folder you want. Just open your intended folder and press 'CTRL-V'.`n`nAdditionally, a log file is copied. This log-file displays for every file that got renamed its original path. Files which are not renamed - and thus are missing in the output - are not shown in the log."
         : "- The folder containing the renamed images will open once this message box is closed.`n`nA log mapping each image to its new name is given in the file '__gfa_renamer_log.txt' within the output directory 'GFAR_WD'. The original image files are preserved in the original folder."
     MsgBox 0x40, % script.name " - Script finished",% FinalInfoBox_String
