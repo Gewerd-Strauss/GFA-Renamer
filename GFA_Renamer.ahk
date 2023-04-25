@@ -1,12 +1,12 @@
 #Requires AutoHotkey v1.1.35+ ;; version at which script was written.
-#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+#NoEnv ; Recommended for performance and compatibility with future AutoHotkey releases.
 #SingleInstance,Force
 #MaxHotkeysPerInterval, 99999999
 #Warn All, Outputdebug
 
-;#Persistent 
-SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+;#Persistent
+SendMode Input ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
 DetectHiddenWindows, On
 SetKeyDelay -1,-1
 SetBatchLines,-1
@@ -14,44 +14,29 @@ SetTitleMatchMode, 2
 
 FileGetTime, ModDate,%A_ScriptFullPath%,M
 FileGetTime, CrtDate,%A_ScriptFullPath%,C
-CrtDate:=SubStr(CrtDate,7,  2) "." SubStr(CrtDate,5,2) "." SubStr(CrtDate,1,4)
-ModDate:=SubStr(ModDate,7,  2) "." SubStr(ModDate,5,2) "." SubStr(ModDate,1,4)
+CrtDate:=SubStr(CrtDate,7, 2) "." SubStr(CrtDate,5,2) "." SubStr(CrtDate,1,4)
+ModDate:=SubStr(ModDate,7, 2) "." SubStr(ModDate,5,2) "." SubStr(ModDate,1,4)
 global script := new script()
-script := {base         : script.base
-                    ,name         : regexreplace(A_ScriptName, "\.\w+")
-                    ,Computername : A_ComputerName
-                    ,version      : ""
-                    ,author       : "Gewerd Strauss"
-                    ,authorID	  : "Laptop-C"
-                    ,authorlink   : ""
-                    ,email        : ""
-                    ,credits      : ""
-                    ,creditslink  : ""
-                    ,email        : "csa-07@freenet.de"
-                    ,crtdate      : CrtDate
-                    ,moddate      : ModDate
-                    ,homepagetext : ""
-                    ,homepagelink : ""
-                    ,ghtext 	  : "GitHub-Repository"
-                    ,ghlink       : "https://github.com/Gewerd-Strauss/GFA-Renamer"
-                    ,doctext	  : "Documentation"
-                    ,doclink	  : "https://github.com/Gewerd-Strauss/GFA-Renamer#readme"
-                    ,offdoclink   : A_ScriptDir "\assets\Documentation\GFA_Renamer_Readme.html"
-                    ,forumtext	  : ""
-                    ,forumlink	  : ""
-                    ,donateLink	  : ""
-                    ,resfolder    : A_ScriptDir "\res"
-                    ,iconfile	  : ""
-                    ,reqInternet: false
-                    ,rfile  	  : "https://github.com/Gewerd-Strauss/GFA-Renamer/archive/refs/heads/master.zip"
-                    ,vfile_raw	  : "https://raw.githubusercontent.com/Gewerd-Strauss/GFA-Renamer/master/version.ini" 
-                    ,vfile 		  : "https://raw.githubusercontent.com/Gewerd-Strauss/GFA-Renamer/master/version.ini" 
-                    ,vfile_local  : A_ScriptDir "\res\version.ini" 
-                    ,EL           : "359b3d07acd54175a1257e311b5dfaa8370467c95f869d80dba32f4afdcae19f4485d67815d9c1f4fe9a024586584b3a0e37489e7cfaad8ce4bbc657ed79bd74"
-                    ,config:		[]
-                    ,configfile   : A_ScriptDir "\res\" regexreplace(A_ScriptName, "\.\w+") ".ini"
-                    ,configfolder : A_ScriptDir "\res"
-                    ,license      : A_ScriptDir "\res\LICENSE.txt"}
+script := {base : script.base
+    , name : regexreplace(A_ScriptName, "\.\w+")
+    , crtdate : CrtDate
+    , moddate : ModDate
+    , offdoclink : A_ScriptDir "\assets\Documentation\GFA_Renamer_Readme.html"
+    , resfolder : A_ScriptDir "\res"
+    , config: []
+    , configfile : A_ScriptDir "\res\" regexreplace(A_ScriptName, "\.\w+") ".ini"
+    , configfolder : A_ScriptDir "\res"
+    , aboutPath : A_ScriptDir "\res\About.html"
+    , reqInternet: false
+    , rfile : "https://github.com/Gewerd-Strauss/GFA-Renamer/archive/refs/heads/master.zip"
+    , vfile_raw : "https://raw.githubusercontent.com/Gewerd-Strauss/GFA-Renamer/master/version.ini"
+    , vfile : "https://raw.githubusercontent.com/Gewerd-Strauss/GFA-Renamer/master/version.ini"
+    , vfile_local : A_ScriptDir "\res\version.ini"
+    , EL : "359b3d07acd54175a1257e311b5dfaa8370467c95f869d80dba32f4afdcae19f4485d67815d9c1f4fe9a024586584b3a0e37489e7cfaad8ce4bbc657ed79bd74"
+    , authorID : "Laptop-C"
+    , Computername : A_ComputerName
+    , license : A_ScriptDir "\res\LICENSE.txt" ;; do not edit the variables above if you don't know what you are doing.
+    , blank : "" }
 currLicense:=Hash_File(A_ScriptDir "\res\LICENSE.txt","sha512")
 global bTestSet:=false
 global TEST_FOLDERPATH:=false
@@ -81,7 +66,7 @@ if !FileExist(script.configfile) {
 script.config:=ini(script.configfile)
 
 OutputDebug, % script.config.Count()
-if !script.config.Count() { 
+if !script.config.Count() {
     script.config:={"Config":{version:1.3.2},"LastRun":{Names:"",PlantsPerGroup:""}}
     OnMessage(0x44, "MsgBoxCallback")
     MsgBox 0x40, % script.name " - Initialisation",% "Initialised settings-file. `nThis will keep track of the last data you provided.`n`nThis config-file is located at`n`n'" A_ScriptDir "\res\" A_ScriptName ".ini'`n`nYou can now continue."
@@ -92,7 +77,7 @@ script.version:=script.config.Config.Version
 ;; setup the GUI.
 yP:=A_ScreenHeight-500
 xP:=A_ScreenWidth-440
-gui, GFAR: new, +AlwaysOnTop -SysMenu -ToolWindow -caption +Border  +hwndGFAGui
+gui, GFAR: new, +AlwaysOnTop -SysMenu -ToolWindow -caption +Border +hwndGFAGui
 gui, Font, s10
 gui, add, text,vCHSNFLDR_STRING,% "Please drag and drop the folder you want to use on this window.`n`nChosen folder:"
 
@@ -102,44 +87,44 @@ try {
         LastRunCount:=CountFiles(script.config.Lastrun.Folder)
     }
 
-} catch e { 
+} catch e {
     ttip(e)
 }
 if (LastRunCount) {
     gui, add, Edit, w400 h110 vFolder disabled, % script.config.LastRun.Folder
 } else {
-    gui, add, Edit, w400 h110 vFolder disabled, 
+    gui, add, Edit, w400 h110 vFolder disabled,
 }
 gui, add, text,, % "Enter Group names, delimited by a comma ','."
 gui, add, edit, vNames w200, % script.config.LastRun.Names
 gui, add, text,, % "Please set the number of pots/plants per group.`nValue must be an integer."
 gui, add, edit, vPlantsPerGroup w200 Number, % script.config.LastRun.PlantsPerGroup
-;gui, add, text,vvUsedStick, % "used Stick: " (device_name!=""? "'" device_name "'": "Device '" script.config.config.USB_Stick_Name "' could not be found.") 
+;gui, add, text,vvUsedStick, % "used Stick: " (device_name!=""? "'" device_name "'": "Device '" script.config.config.USB_Stick_Name "' could not be found.")
 gui, add, Button, vSubmitButton disabled gGFARSubmit, &Submit
 gui, add, Button, yp xp+64 gGFARHelp, &Help
 gui, add, Button, yp xp+51 gGFARAbout, &About
 onOpenConfig:=Func("GFARopenConfig").Bind(script.configfile)
-gui, add, button,  hwndOpenConfig yp xp+58, &Config
+gui, add, button, hwndOpenConfig yp xp+58, &Config
 GuiControl, +g,%OpenConfig%, % onOpenConfig
 ; if !(A_IsCompiled) {
-    gui, add, button, hwndSetTestset yp xp+60, % "Set Testset"
-    onSetTestset:=Func("setTestset").Bind(A_ScriptDir "\assets\Image Test Files",script.config.Testset.Names,script.config.Testset.PlantsPerGroup)
-    guicontrol, +g, %SetTestset%, % onSetTestset
+gui, add, button, hwndSetTestset yp xp+60, % "Set Testset"
+onSetTestset:=Func("setTestset").Bind(A_ScriptDir "\assets\Image Test Files",script.config.Testset.Names,script.config.Testset.PlantsPerGroup)
+guicontrol, +g, %SetTestset%, % onSetTestset
 ; }
 gui, font, s7
 gui, add, text,yp+20 x350,% "v." script.version " by ~Gw"
-gui, GFAR: show, w430  x%xP%  y%yP%  ,% "Drop folder with images on this window"
+gui, GFAR: show, w430 x%xP% y%yP% ,% "Drop folder with images on this window"
 return
 #if Winactive("ahk_id " GFAGui) ;; make the following hotkey only trigger when the specific GUI has keyboard-focus.
-Esc::GFAREscape()
+    Esc::GFAREscape()
 #if Winactive("ahk_id " GFAR_ExcludeGui) ;; make the following hotkey only trigger when the specific GUI has keyboard-focus.
-Esc::GFAR_ExcludeEscape()
+    Esc::GFAR_ExcludeEscape()
 #if ;; end the hotkey-conditions
 
 ;; Set the settings for the test-set files in the program's own directory.
 
 ;; receive the GuiDropFiles_message
-GFARGuiDropFiles(GuiHwnd, FileArray, CtrlHwnd, X, Y) { 
+GFARGuiDropFiles(GuiHwnd, FileArray, CtrlHwnd, X, Y) {
     Count:=0
     for i, file in FileArray {
         guicontrol,, Folder, % file
@@ -164,12 +149,12 @@ GFARopenConfig(configfile) {
     WinWaitClose, % "ahk_PID" PID
     Gui +OwnDialogs
     OnMessage(0x44, "GFARopenConfig_OnMsgBox")
-    MsgBox 0x40044, %  script.name " > " A_ThisFunc "()", You modified the configuration for this script.`nReload?
+    MsgBox 0x40044, % script.name " > " A_ThisFunc "()", You modified the configuration for this script.`nReload?
     OnMessage(0x44, "")
     IfMsgBox Yes, {
         reload
     } Else IfMsgBox No, {
-        
+
     }
     return
 }
@@ -212,13 +197,13 @@ GFARSubmit() {
         Number:=repeatIndex(PlantsPerGroup)
         Arr.push(GroupName " (" Number ")")
         if (bReset) {
-            
+
         }
     }
     ;ttip(repeatElementIofarrayNKtimes())
     TrueNumberOfFiles:=0
     ImagePaths:=[]
-    
+
     opt:=(bTestSet?"FR":"F")
     query:=Folder "\*." script.config.Config.filetype
     Loop, Files, % query, % opt
@@ -233,22 +218,22 @@ GFARSubmit() {
             TEST_FOLDERPATH:=A_LoopFileDir
         }
     }
-    str:="Number of Images that would be renamed given the settings provided: "  Arr.Count() "`nFound number of images: " TrueNumberOfFiles "`n"
+    str:="Number of Images that would be renamed given the settings provided: " Arr.Count() "`nFound number of images: " TrueNumberOfFiles "`n"
     Files:=str
     /*
-    Think aobut what should happen if you have less images than names - this makes the GUI unfitting for renaming, 
+    Think aobut what should happen if you have less images than names - this makes the GUI unfitting for renaming,
     cuz you'd have to recursively look at every image to verify its name, then recurse to exclude names from the array
     until you have them all line up again.
     */
     if (ImagePaths.Count() > Arr.Count()) {
         msgbox, % "Critical error: you have more images than names available"
     }
-    gui, GFAR_Exclude: new, +AlwaysOnTop  -SysMenu -ToolWindow -caption +Border  +hwndGFAR_ExcludeGui
+    gui, GFAR_Exclude: new, +AlwaysOnTop -SysMenu -ToolWindow -caption +Border +hwndGFAR_ExcludeGui
     gui, GFAR_Exclude: +OwnerGFAR
     gui, GFAR: +disabled
     gui, Font, s10
     gui, add, text,,% "Please UNTICK any name you do not have an image for (at that position).`nNotes:`n - Files are not actually skipped. Instead, by unticking a row you prevent the name of a pot that you don't have an image`nof from being applied to the 'next-in-line' image.)`n - Double-click an entry in this list to view the image`n - Select an image and press F2 if you want to change the name it will be assigned (and you know what you are doing.)"
-    gui, add, Listview,  Checked vvLV_SelectedEntries w700 R30 -ReadOnly WantF2 Report gGFAR_ExcludeInspectSelection, Name | Expected Filepath
+    gui, add, Listview, Checked vvLV_SelectedEntries w700 R30 -ReadOnly WantF2 Report gGFAR_ExcludeInspectSelection, Name | Expected Filepath
     ;Arr2:=ForceOrder(Arr)
     ImagePaths2:=ForceOrder(ImagePaths)
     ;Clipboard:= "OLD:`n" StringifyObject(Arr) "`n---`n" StringifyObject(ImagePaths) "`n---`n" "`n---`nNEW:`n" StringifyObject(Arr2) "`n---`n" StringifyObject(ImagePaths2)
@@ -256,11 +241,11 @@ GFARSubmit() {
     gui, add, text,, % "Images/Names: (" ImagePaths.Count() "/" Arr.Count() ")"
     gui, add, Button, gGFAR_DuplicatetoShiftFrame vvGFAR_DuplicatetoShiftFrame disabled, &Duplicate to shift frame
     gui, add, Button,yp xp+170 vvGFAR_ExcludeSubmitButton gGFAR_ExcludeSubmit, &Continue
-    
+
     GFAR_LastImage:=Func("GFAR_ExcludeOpenPath").Bind(ImageF)
     gui, add, Button, yp xp+80 hwndGFAR_ExcludeOpenLastImage,Open &Last image
     GuiControl, +g, %GFAR_ExcludeOpenLastImage%, % GFAR_LastImage
-    
+
     GFAR_OpenFolder:=Func("GFAR_ExcludeOpenPath").Bind(Folder)
     GFAR_OpenSelectedImage:=Func("GFAR_ExcludeInspectSelection").Bind(Folder)
     gui, add, Button, yp xp+130 hwndGFAR_ExcludeOpenFolder,Open &Folder
@@ -288,14 +273,14 @@ GFAR_DuplicatetoShiftFrame() {
     sel2:=strsplit(sel[1],"||")
     Delim:=(SubStr(Folder, -1 )!="\"?"\":"")
     if (TEST_FOLDERPATH!="") {
-        InspectedImage:=TEST_FOLDERPATH  Delim  sel2[3] "." script.config.Config.filetype
+        InspectedImage:=TEST_FOLDERPATH Delim sel2[3] "." script.config.Config.filetype
         Padding_Name:=TEST_FOLDERPATH Delim sel2[3] " (padding)." script.config.Config.filetype
     } else {
-        InspectedImage:=Folder  Delim  sel2[3] "." script.config.Config.filetype
-        Padding_Name:=Folder  Delim sel2[3] " (padding)." script.config.Config.filetype
+        InspectedImage:=Folder Delim sel2[3] "." script.config.Config.filetype
+        Padding_Name:=Folder Delim sel2[3] " (padding)." script.config.Config.filetype
     }
     FileCopy, % InspectedImage,% Padding_Name, 0
-    
+
     ;; Arr
     ;; ImagePaths
     Position_Original:=HasVal(ImagePaths,InspectedImage)
@@ -312,7 +297,7 @@ GFAR_DuplicatetoShiftFrame() {
     return SourceImagesToDelete
 }
 
-f_UpdateLV(Array,Array2) { 
+f_UpdateLV(Array,Array2) {
     ; updates the selected LV. LV MUST BE SELECTED BEFORE.
     LV_Delete()
     for k,v in Array {
@@ -327,7 +312,7 @@ GFAR_ExcludeOpenPath(Path) {
 
     Run, % Path, , , vPID
     gui, GFAR_Exclude: +AlwaysOnTop
-    
+
     return
 }
 
@@ -338,9 +323,9 @@ GFAR_ExcludeInspectSelection() {
     Delim:=(SubStr(Folder, -1 )!="\"?"\":"")
     LV_ModifyCol(1,"auto")
     if (TEST_FOLDERPATH!="") {
-        InspectedImage:=TEST_FOLDERPATH  Delim  sel2[3] "." script.config.Config.filetype
+        InspectedImage:=TEST_FOLDERPATH Delim sel2[3] "." script.config.Config.filetype
     } else {
-        InspectedImage:=Folder  Delim  sel2[3] "." script.config.Config.filetype
+        InspectedImage:=Folder Delim sel2[3] "." script.config.Config.filetype
     }
     if (FileExist(InspectedImage) && A_GuiEvent!="e") {
         run, % InspectedImage
@@ -358,46 +343,46 @@ GFAR_ExcludeEscape() {
 GFAR_ExcludeSubmit() {
     global
     gui, GFAR: -disabled
-    
-    Sel:=f_GetCheckedLVEntries()            ;; retrieve all rows of the Listview that we have checked/not unchecked
-    gui, GFAR_Exclude: Submit               ;; submit the GUI to get all data inputted into it formally.
 
-    Count_CopiedImages:=0                   ;; if duplicates are excluded or padding files exist, we want less files in the output than in the Working Directory.
-    
+    Sel:=f_GetCheckedLVEntries() ;; retrieve all rows of the Listview that we have checked/not unchecked
+    gui, GFAR_Exclude: Submit ;; submit the GUI to get all data inputted into it formally.
+
+    Count_CopiedImages:=0 ;; if duplicates are excluded or padding files exist, we want less files in the output than in the Working Directory.
+
     /*
     ;; we have deselected some files in the final GUI. Thus, we cannot  use a fileloop easily. This can have the following reasons:
 
-    1. We have deselected images because they are wrong, but all images afterwards are correct 
+    1. We have deselected images because they are wrong, but all images afterwards are correct
     (aka, all intended images have been assigned the names they should receive, but for whatever reason we don't want the image X to be processed - maybe it was damaged and the plant was removed, but the image was shot beforehand, or was shot to make processing easier.)
     */
     if (Sel.Count()<TrueNumberOfFiles) {
         Log:="Expected Number of images: " TrueNumberOfFiles "`nFound Number of images: " Sel.Count() "`n"
         LogBody:=""
         FilestoCopy:=""
-        for Sel_Index,Sel_String in Sel     ;; iterate over all entries that we left checked. These will be renamed based on the Entries of the Listview - the name displayed will be applied to the respectively displayed filename
+        for Sel_Index,Sel_String in Sel ;; iterate over all entries that we left checked. These will be renamed based on the Entries of the Listview - the name displayed will be applied to the respectively displayed filename
         {
             if (TEST_FOLDERPATH!="") {
                 Folder:=TEST_FOLDERPATH
             }
             Sel_Arr:=strsplit(Sel_String,"||")
             Delim:=(SubStr(Folder, -1 )!="\"?"\":"")
-            RenamedImage:=Folder  Delim Sel_Arr[3] "." script.config.Config.filetype
+            RenamedImage:=Folder Delim Sel_Arr[3] "." script.config.Config.filetype
             scriptWorkingDir:=renameFile(RenamedImage,Sel_Arr[2],true,Sel_Index,Sel.Count())
             LogBody.=RenamedImage " - " Sel_Arr[2] "`n"
             FilestoCopy.=scriptWorkingDir "\" Arr[A_Index] "." script.config.Config.filetype "`n"
-            Count_CopiedImages++            ;; for every file that is renamed, 
+            Count_CopiedImages++ ;; for every file that is renamed,
         }
-        writeFile(logfile:=scriptWorkingDir "\__gfa_renamer_log.txt",Log LogBody, "UTF-8-RAW","w",true)    ;; ensure the log-file is written as UTF-8, in case there are unicode characters in any groupname. Just a precaution
+        writeFile(logfile:=scriptWorkingDir "\__gfa_renamer_log.txt",Log LogBody, "UTF-8-RAW","w",true) ;; ensure the log-file is written as UTF-8, in case there are unicode characters in any groupname. Just a precaution
     } else {
         Log:="Expected Number of images: " TrueNumberOfFiles "`nFound Number of images: " Sel.Count() "`n"
-        for Sel_Index,Sel_String in Sel     ;; iterate over all entries that we left checked. These will be renamed based on the Entries of the Listview - the name displayed will be applied to the respectively displayed filename
+        for Sel_Index,Sel_String in Sel ;; iterate over all entries that we left checked. These will be renamed based on the Entries of the Listview - the name displayed will be applied to the respectively displayed filename
         {
             if (TEST_FOLDERPATH!="") {
                 Folder:=TEST_FOLDERPATH
             }
             Sel_Arr:=strsplit(Sel_String,"||")
             Delim:=(SubStr(Folder, -1 )!="\"?"\":"")
-            RenamedImage:=Folder  Delim Sel_Arr[3] "." script.config.Config.filetype
+            RenamedImage:=Folder Delim Sel_Arr[3] "." script.config.Config.filetype
             if InStr(Sel_Arr[3],"(padding)") { ;; remove padding files and advance to next iteration
                 FileDelete, % RenamedImage
                 continue
@@ -405,7 +390,7 @@ GFAR_ExcludeSubmit() {
             scriptWorkingDir:=renameFile(RenamedImage,Sel_Arr[2],true,Sel_Index,Sel.Count())
             LogBody.=RenamedImage " - " Sel_Arr[2] "`n"
             FilestoCopy.=scriptWorkingDir "\" Sel_Arr[2] "." script.config.Config.filetype "`n"
-            Count_CopiedImages++            ;; for every file that is renamed, 
+            Count_CopiedImages++ ;; for every file that is renamed,
         }
         Log.="Renamed Number of images: " Count_CopiedImages "`n"
         writeFile(logfile:=scriptWorkingDir "\__gfa_renamer_log.txt",Log LogBody, "UTF-8-RAW","w",true)
@@ -413,15 +398,15 @@ GFAR_ExcludeSubmit() {
     FilestoCopy.=logfile "`n"
     if (script.config.Config.PutFilesOnClipboardForPastingToStick) {
         if (script.config.Config.CopyFilesInsteadOfCuttingThem)
-        if !ClipboardSetFiles(FilestoCopy,"Move") {
-            StdErr_Write(A_LineNumber, "ClipboardSetFiles was unable to put the renamed images to the clipboard.", spec = FilestoCopy)
+            if !ClipboardSetFiles(FilestoCopy,"Move") {
+                StdErr_Write(A_LineNumber, "ClipboardSetFiles was unable to put the renamed images to the clipboard.", spec = FilestoCopy)
             
-        }
+            }
     } else {
         if (WinExist(scriptWorkingDir " ahk_exe explorer.exe")) {
             WinActivate
             return
-        } 
+        }
         Else {
             run, % scriptWorkingDir
         }
@@ -430,9 +415,9 @@ GFAR_ExcludeSubmit() {
     OnMessage(0x44, "OnMsgBox2")
     FinalInfoBox_String:="The script finished running.`n"
     FinalInfoBox_String.= (script.config.Config.PutFilesOnClipboardForPastingToStick)
-                        ? "The renamed image files are now ready to be pasted into whatever folder you want. Just open your intended folder and press 'CTRL-V'.`n`nAdditionally, a log file is copied. This log-file displays for every file that got renamed its original path. Files which are not renamed - and thus are missing in the output - are not shown in the log."
-                        : "- The folder containing the renamed images will open once this message box is closed.`n`nA log mapping each image to its new name is given in the file '__gfa_renamer_log.txt' within the output directory 'GFAR_WD'. The original image files are preserved in the original folder."
-    MsgBox 0x40, % script.name " -  Script finished",% FinalInfoBox_String
+        ? "The renamed image files are now ready to be pasted into whatever folder you want. Just open your intended folder and press 'CTRL-V'.`n`nAdditionally, a log file is copied. This log-file displays for every file that got renamed its original path. Files which are not renamed - and thus are missing in the output - are not shown in the log."
+        : "- The folder containing the renamed images will open once this message box is closed.`n`nA log mapping each image to its new name is given in the file '__gfa_renamer_log.txt' within the output directory 'GFAR_WD'. The original image files are preserved in the original folder."
+    MsgBox 0x40, % script.name " - Script finished",% FinalInfoBox_String
     OnMessage(0x44, "")
     scriptWorkingDir2:=""
     scriptWorkingDir2:=scriptWorkingDir
@@ -449,7 +434,7 @@ f_GetSelectedLVEntries() {
     loop
     {
         vRowNum:=LV_GetNext(vRowNum)
-        if not vRowNum  ; The above returned zero, so there are no more selected rows.
+        if not vRowNum ; The above returned zero, so there are no more selected rows.
             break
         LV_GetText(sCurrText1,vRowNum,1)
         LV_GetText(sCurrText2,vRowNum,2)
@@ -464,7 +449,7 @@ f_GetCheckedLVEntries() {
     loop
     {
         vRowNum:=LV_GetNext(vRowNum,"C")
-        if not vRowNum  ; The above returned zero, so there are no more checked rows.
+        if not vRowNum ; The above returned zero, so there are no more checked rows.
             break
         LV_GetText(sCurrText1,vRowNum,1)
         LV_GetText(sCurrText2,vRowNum,2)
@@ -473,16 +458,16 @@ f_GetCheckedLVEntries() {
     }
     return sel
 }
-writeFile(Path,Content,Encoding:="",Flags:=0x2,bSafeOverwrite:=false) { 
+writeFile(Path,Content,Encoding:="",Flags:=0x2,bSafeOverwrite:=false) {
 
-    if (bSafeOverwrite && FileExist(Path))  ;; if we want to ensure nonexistance.
+    if (bSafeOverwrite && FileExist(Path)) ;; if we want to ensure nonexistance.
         FileDelete, % Path
     if (Encoding!="")
     {
         if (fObj:=FileOpen(Path,Flags,Encoding))
         {
             fObj.Write(Content) ;; insert contents
-            fObj.Close()        ;; close file
+            fObj.Close() ;; close file
         }
         else
             throw Exception("File could not be opened. Flags:`n" Flags, -1, myFile)
@@ -492,7 +477,7 @@ writeFile(Path,Content,Encoding:="",Flags:=0x2,bSafeOverwrite:=false) {
         if (fObj:=FileOpen(Path,Flags))
         {
             fObj.Write(Content) ;; insert contents
-            fObj.Close()        ;; close file
+            fObj.Close() ;; close file
         }
         else
             throw Exception("File could not be opened. Flags:`n" Flags, -1, myFile)
@@ -502,10 +487,10 @@ writeFile(Path,Content,Encoding:="",Flags:=0x2,bSafeOverwrite:=false) {
 renameFile(Path,Name,Backup:=true,CurrentIndex:="",TotalCount:="") {
     static HasBackuped:=false
     SplitPath, % Path, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
-    if !Instr(FileExist(scriptWorkingDir:=OutDir "\"  "GFAR_WD"),"D")
+    if !Instr(FileExist(scriptWorkingDir:=OutDir "\" "GFAR_WD"),"D")
         FileCreateDir, % scriptWorkingDir
     ttip(["Renaming (" CurrentIndex "/" TotalCount ")",[Path,Name]])
-    FileCopy, % Path, % scriptWorkingDir  "\" Name "." OutExtension
+    FileCopy, % Path, % scriptWorkingDir "\" Name "." OutExtension
     return scriptWorkingDir
 }
 
@@ -525,17 +510,17 @@ repeatElementIofarrayNKtimes(array:="",repetitions:="",bDebug:=true,resetCallInd
     }
     if (sites.Count() = 0) || (lastNames!=Names) { ; It is the first run, let set variables and see their contents
         lastNames:=Names
-        k := 5         ; Arbitrary set to a desired value
+        k := 5 ; Arbitrary set to a desired value
         k := repetitions
         callIndex := 0 ; Always start at zero to add from there
-        position := 1  ; Have a value on the first iteration
+        position := 1 ; Have a value on the first iteration
         sites := {}
         sites := array
-        OutputDebug % "Sites (N-elements):   " sites.Count() "`n"
+        OutputDebug % "Sites (N-elements): " sites.Count() "`n"
         OutputDebug % "Calls (K-iterations): " k "`n"
     }
     site := sites[position]
-    OutputDebug % callIndex " "   site " - "
+    OutputDebug % callIndex " " site " - "
 
     callIndex++ ; Increment `callIndex`, meaning that we made a new call to the function
     modResult := Mod(callIndex, k)
@@ -573,17 +558,17 @@ reload() {
 
 
 ;DN |N  |H
-        #Include, <Base64PNG_to_HICON>
+#Include, <Base64PNG_to_HICON>
 #Include, <Cleanup>
-        #Include, <ClipboardSetFiles>
+#Include, <ClipboardSetFiles>
 #Include, <CountFilesR>
 #Include, <ForceOrder>
-    #Include, <Hash_File>
-    #include, <ini>
+#Include, <Hash_File>
+#include, <ini>
 #Include, <MessageBoxes>
 #Include, <Object_HashmapHash>
 #Include, <script>
-        #Include, <StdErr_Write>
+#Include, <StdErr_Write>
 #Include, <StringifyObject>
 #Include, <TestDataset>
 #Include, <ttip>
