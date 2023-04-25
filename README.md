@@ -2,6 +2,9 @@
 
 This  is a small utility script written for my internship. Simply drag a folder containing ordered image files onto the GUI and follow the Instructions.
 
+## Getting started
+
+After downloading the script, run `setup.ahk` or `setup.exe` (depending on whether or not you have AutoHotkey)
 
 ## THE GUI
 

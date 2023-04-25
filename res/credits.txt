@@ -1,12 +1,12 @@
 SKAN            -       Base64PNG_to_HICON, regarding licensing                             - https://www.autohotkey.com/boards/viewtopic.php?f=6&t=36636, https://www.autohotkey.com/board/topic/75906-about-my-scripts-and-snippets/
                         cleanup
-just me         -       ClipboardSetFiles (considered PD by author)                                                   - https://www.autohotkey.com/boards/viewtopic.php?p=63914#p63914
+just me         -       ClipboardSetFiles (considered PD by author)                         - https://www.autohotkey.com/boards/viewtopic.php?p=63914#p63914
                         CountFiles
                         ForceOrder
-anonymous1184   -       Hash_File.ahk, License                                              - https://gist.github.com/anonymous1184/737749e83ade98c84cf619aabf66b063,https://gist.githubusercontent.com/anonymous1184/07e30be81ee0cd2e8c9fd75c7806c8a0/raw/5490959c8d6e4780a1598b4ea72241e306cc574a/LICENSE.txt
+anonymous1184   -       Hash_File.ahk, License                                              - https://gist.github.com/anonymous1184/07e30be81ee0cd2e8c9fd75c7806c8a0 ,https://gist.githubusercontent.com/anonymous1184/07e30be81ee0cd2e8c9fd75c7806c8a0/raw/5490959c8d6e4780a1598b4ea72241e306cc574a/LICENSE.txt
 icons8          -       Icon                                                                - https://icons8.com/icon/Ou81cXLcsZzX/potted-plant"
-anonymous1184   -       Ini.ahk, License                                                    - https://gist.github.com/anonymous1184/737749e83ade98c84cf619aabf66b063,https://gist.githubusercontent.com/anonymous1184/737749e83ade98c84cf619aabf66b063/raw/3a1abdd5c655705ee4557fff7c26fb4ca46ce650/LICENSE.txt
-                        MessageBoxes
+anonymous1184   -       Ini.ahk, License                                                    - https://gist.github.com/anonymous1184/737749e83ade98c84cf619aabf66b063, https://gist.githubusercontent.com/anonymous1184/737749e83ade98c84cf619aabf66b063/raw/3a1abdd5c655705ee4557fff7c26fb4ca46ce650/LICENSE.txt
+                        MessageBoxes 
                         Object_HashmapHash
 Gewerd Strauss  -       partial, self-written subset of ScriptObj                           - https://github.com/Gewerd-Strauss/ScriptObj/blob/master/ScriptObj.ahk
                         setupdefaultconfig
