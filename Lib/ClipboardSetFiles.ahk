@@ -1,49 +1,53 @@
-; --uID:887366420
- ; Metadata:
-  ; Snippet: ClipboardSetFiles()
-  ; --------------------------------------------------------------
-  ; Author: just me
-  ; License: Unlicense
-  ; Source: https://www.autohotkey.com/boards/viewtopic.php?p=63914#p63914
-  ; (26.12.2015)
-  ; --------------------------------------------------------------
-  ; Library: AHK-Rare
-  ; Section: 20 - Clipboard
-  ; Dependencies: /
-  ; AHK_Version: v1
-  ; --------------------------------------------------------------
+; #region:ClipboardSetFiles() (887366420)
+
+; #region:Metadata:
+; Snippet: ClipboardSetFiles()
+; --------------------------------------------------------------
+; Author: just me
+; License: Unlicense
+; Source: https://www.autohotkey.com/boards/viewtopic.php?p=63914#p63914
+; (19 April 2023)
+; --------------------------------------------------------------
+; Library: AHK-Rare
+; Section: 19 - Clipboard
+; Dependencies: /
+; AHK_Version: v1
+; --------------------------------------------------------------
+
+; #endregion:Metadata
 
 
- ;; Description:
-  ;; Explorer function for Drag&Drop and Pasting. Enables the explorer paste context menu option.
-  ;; 
-  ;; 
-  ;; regarding license: even though he hasn't published anything to the regard, in a direct 
-  ;; message on the ahk forums on 13.04.2023 he stated that unless stated otherwhise, his code
-  ;; published on the forums is in the public domain under the Unlicense -> https://unlicense.org/
-  
- ;;; Example:
-  ;;; #NoEnv
-  ;;; ; Retrieve files in a certain directory sorted by modification date:
-  ;;; FileList :=  "" ; Initialize to be blank
-  ;;; ; Create a list of those files consisting of the time the file was modified and the file path separated by tab
-  ;;; Loop, %A_MyDocuments%\*.*
-  ;;;    FileList .= A_LoopFileTimeModified . "`t" . A_LoopFileLongPath . "`n"
-  ;;; Sort, FileList, R  ;   ; Sort by time modified in reverse order
-  ;;; Loop, Parse, FileList, `n
-  ;;; {
-  ;;;    If (A_LoopField = "") ; omit the last linefeed (blank item) at the end of the list.
-  ;;;       Continue
-  ;;;    StringSplit, FileItem, A_LoopField, %A_Tab%  ; Split into two parts at the tab char
-  ;;;    ; FileItem1 is FileTimeModified und FileItem2 is FileName
-  ;;;    MsgBox, 36, Last modified file, %FileItem1% - %FileItem2%`n`nDo you want to continue?
-  ;;;    IfMsgBox, Yes
-  ;;;       ClipBoardSetFiles(FileItem2)
-  ;;;    Break
-  ;;; }
-  ;;; ExitApp
+; #region:Description:
+; Explorer function for Drag&Drop and Pasting. Enables the explorer paste context menu option.
+; 
+; 
+; #endregion:Description
 
-  ClipboardSetFiles(FilesToSet, DropEffect := "Copy") {
+; #region:Example
+; #NoEnv
+; ; Retrieve files in a certain directory sorted by modification date:
+; FileList :=  "" ; Initialize to be blank
+; ; Create a list of those files consisting of the time the file was modified and the file path separated by tab
+; Loop, %A_MyDocuments%\*.*
+;    FileList .= A_LoopFileTimeModified . "`t" . A_LoopFileLongPath . "`n"
+; Sort, FileList, R  ;   ; Sort by time modified in reverse order
+; Loop, Parse, FileList, `n
+; {
+;    If (A_LoopField = "") ; omit the last linefeed (blank item) at the end of the list.
+;       Continue
+;    StringSplit, FileItem, A_LoopField, %A_Tab%  ; Split into two parts at the tab char
+;    ; FileItem1 is FileTimeModified und FileItem2 is FileName
+;    MsgBox, 36, Last modified file, %FileItem1% - %FileItem2%`n`nDo you want to continue?
+;    IfMsgBox, Yes
+;       ClipBoardSetFiles(FileItem2)
+;    Break
+; }
+; ExitApp
+; #endregion:Example
+
+
+; #region:Code
+ClipboardSetFiles(FilesToSet, DropEffect := "Copy") {
    ; FilesToSet - list of fully qualified file pathes separated by "`n" or "`r`n"
    ; DropEffect - preferred drop effect, either "Copy", "Move" or "" (empty string)
    Static TCS := A_IsUnicode ? 2 : 1 ; size of a TCHAR
@@ -90,7 +94,9 @@
       Return True
    }
    Return False
-   }
+}
+; #endregion:Code
 
 
-; --uID:887366420
+
+; #endregion:ClipboardSetFiles() (887366420)

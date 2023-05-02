@@ -1,42 +1,42 @@
 #Requires AutoHotkey v1.1.35+ ;; version at which script was written.
 #NoEnv ; Recommended for performance and compatibility with future AutoHotkey releases.
-#SingleInstance,Force
-#MaxHotkeysPerInterval, 99999999
+#SingleInstance Force
+#MaxHotkeysPerInterval 99999999
 #Warn All, Outputdebug
 
 ;#Persistent
 SendMode Input ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
-DetectHiddenWindows, On
+DetectHiddenWindows On
 SetKeyDelay -1,-1
-SetBatchLines,-1
-SetTitleMatchMode, 2
+SetBatchLines -1
+SetTitleMatchMode 2
 
-FileGetTime, ModDate,%A_ScriptFullPath%,M
-FileGetTime, CrtDate,%A_ScriptFullPath%,C
+FileGetTime ModDate,%A_ScriptFullPath%,M
+FileGetTime CrtDate,%A_ScriptFullPath%,C
 CrtDate:=SubStr(CrtDate,7, 2) "." SubStr(CrtDate,5,2) "." SubStr(CrtDate,1,4)
 ModDate:=SubStr(ModDate,7, 2) "." SubStr(ModDate,5,2) "." SubStr(ModDate,1,4)
 global script := new script()
 script := {base : script.base
-    , name : regexreplace(A_ScriptName, "\.\w+")
-    , crtdate : CrtDate
-    , moddate : ModDate
-    , offdoclink : A_ScriptDir "\assets\Documentation\GFA_Renamer_Readme.html"
-    , resfolder : A_ScriptDir "\res"
-    , config: []
-    , configfile : A_ScriptDir "\res\" regexreplace(A_ScriptName, "\.\w+") ".ini"
-    , configfolder : A_ScriptDir "\res"
-    , aboutPath : A_ScriptDir "\res\About.html"
-    , reqInternet: false
-    , rfile : "https://github.com/Gewerd-Strauss/GFA-Renamer/archive/refs/heads/master.zip"
-    , vfile_raw : "https://raw.githubusercontent.com/Gewerd-Strauss/GFA-Renamer/master/version.ini"
-    , vfile : "https://raw.githubusercontent.com/Gewerd-Strauss/GFA-Renamer/master/version.ini"
-    , vfile_local : A_ScriptDir "\res\version.ini"
-    , EL : "359b3d07acd54175a1257e311b5dfaa8370467c95f869d80dba32f4afdcae19f4485d67815d9c1f4fe9a024586584b3a0e37489e7cfaad8ce4bbc657ed79bd74"
-    , authorID : "Laptop-C"
-    , Computername : A_ComputerName
-    , license : A_ScriptDir "\res\LICENSE.txt" ;; do not edit the variables above if you don't know what you are doing.
-    , blank : "" }
+        , name : regexreplace(A_ScriptName, "\.\w+")
+        , crtdate : CrtDate
+        , moddate : ModDate
+        , offdoclink : A_ScriptDir "\assets\Documentation\GFA_Renamer_Readme.html"
+        , resfolder : A_ScriptDir "\res"
+        , config: []
+        , configfile : A_ScriptDir "\res\" regexreplace(A_ScriptName, "\.\w+") ".ini"
+        , configfolder : A_ScriptDir "\res"
+        , aboutPath : A_ScriptDir "\res\About.html"
+        , reqInternet: false
+        , rfile : "https://github.com/Gewerd-Strauss/GFA-Renamer/archive/refs/heads/master.zip"
+        , vfile_raw : "https://raw.githubusercontent.com/Gewerd-Strauss/GFA-Renamer/master/version.ini"
+        , vfile : "https://raw.githubusercontent.com/Gewerd-Strauss/GFA-Renamer/master/version.ini"
+        , vfile_local : A_ScriptDir "\res\version.ini"
+        , EL : "359b3d07acd54175a1257e311b5dfaa8370467c95f869d80dba32f4afdcae19f4485d67815d9c1f4fe9a024586584b3a0e37489e7cfaad8ce4bbc657ed79bd74"
+        , authorID : "Laptop-C"
+        , Computername : A_ComputerName
+        , license : A_ScriptDir "\res\LICENSE.txt" ;; do not edit the variables above if you don't know what you are doing.
+        , blank : "" }
 currLicense:=Hash_File(A_ScriptDir "\res\LICENSE.txt","sha512")
 global bTestSet:=false
 global TEST_FOLDERPATH:=false
@@ -48,7 +48,7 @@ if !F {
     IfMsgBox OK, {
         exitApp()
     } Else IfMsgBox Cancel, {
-        run, % script.ghlink
+        run % script.ghlink
         exitApp()
     }
 }
@@ -66,7 +66,7 @@ script.loadMetadata(script.resfolder "\meta.txt")
 script.setIcon("iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAARISURBVGhD7dtLbxNXGMbxbFh2yRIpzkWQgpIUKFAVibCBknIJqCFOZNIbJg0Xp7ikkAAh4SJoCxUENiBgW6ktUldIKQURbmpAIkSiqlqg6gcAvsLLPPPKVjp5bM/xnAllMpb+K4/PeX9yjj1epGKmPpqcBmdAcLqPwcrKSol6cCo3BkczOJUbg6MZnMqNwdEMTuXG4GgGp3JjcDSDU7kG4OzvJ+TAs3NT6p04Kd1XB6TtbJc0fbZGaupq6etNqplX666VPNflrH1QesdP0b2/evAtfb03OJVrAext7x/fS9vwNlnwXiNdp1gLljXI5jNpdw22trdQwZnRI3TTQvX/NSwth1NSVVNF15tcorpKNgylZN+fp+lahfry7jG6njc4lWsAxp8W27RU237pk7kNdXRNNLe+TtJX9tHXlmr7yEG6pjc4lWsATl3aRTf1E96JhhWLp6xZv3yh9Nw+Sl/jp87LPVPWZMGpXANw89etdFO/ZcdOyPwl9fn18M6aHhNvH/a1/WfGQsGpXAPwwlVL6aYmdV89INW11e6ZTV/ZS68xadHqZXRWb3Aq1wCMMjcP041NWru/XdYPdNDnTMqMHpVEIkHn9Aancg3BH2Q30c1Nyj46Lnsef0OfM2lVz0Y6IwtO5RqCcUOQfXCcDuC39P1dkh4r/wMQZW4e8/V1lwtO5RqC0crPm+kQfup/Oizt1zZJ8teN0v/kLL3GTys+WU1nKxScyi0DjFIXd9JBSpWZOCRtI+vdMhMD9JpS4euRzVQsOJVbJhh/2uXciKTHdubBW8d20GuKhT3LuVeHU7llghG+R/E1wwYrVOetzjy4c/Rjek2h8ANlXuPbdJZSwancAGCEd3rL5QwdkNVxvTUP7vjN/41MytkjyK8wOJUbEJwLH2S4fWTDTi55rSUPTo600GsmhzVXbm2me5oEp3ItgRHuoNbs+Uh23yv8MzKHzbX/2TC9Dms097a6a7K9TINTuRbBuRJVCVmy7n3ZMJiST3/IundEvY9OSt/fZ6aA+5yfkHgO1+BavAavxRps7XKDU7khgIvlfSfZNWEEp3JjcLi9seCXdypea2ymYsGp3BjsLzbEdMZmKhacyg0AfnGjQv4Zchqcppy9nl9/jWD073dksJDCXrl92UzFglO5ZYJznR96Kz9E2GEvNoOf4FRuQPAX7bPpcGHUlZxNZ/ATnMoNCF7UOEee3+ID2u7dd+bQGfwEp3IDgtH4j7PogDZ7+NMsurff4HS1ziMw+MI0nOMg5xfBqVwL4O6O8M8xPivY3n6DU7kWwIudc8yGtFmQ84vgVK4FMArzHGNttqdJcLpa52EFfPFIeOcYnxFsT5PgVK4lcJjnGGuzPU2CU7mWwGGe46DnF8GpXEtgNP6z/XNs4/wiOF2t87AGDuMcY022l2lwKtci+P8cnMqNwdEMTuXG4GgGp3JjcDSDU7kz5j/TKppeAamEQurI/tgFAAAAAElFTkSuQmCC")
 TraySetup()
 script.update()
-OutputDebug, % script.config.Count()
+OutputDebug % script.config.Count()
 if !script.config.Count() {
     script.config:={"Config":{version:1.3.2},"LastRun":{Names:"",PlantsPerGroup:""}}
     OnMessage(0x44, "MsgBoxCallback")
@@ -78,9 +78,9 @@ OnExit("Cleanup")
 ;; setup the GUI.
 yP:=A_ScreenHeight-500
 xP:=A_ScreenWidth-440
-gui, GFAR: new, +AlwaysOnTop -SysMenu -ToolWindow -caption +Border +hwndGFAGui
-gui, Font, s10
-gui, add, text,vCHSNFLDR_STRING,% "Please drag and drop the folder you want to use on this window.`n`nChosen folder:"
+gui GFAR: new, +AlwaysOnTop -SysMenu -ToolWindow -caption +Border +hwndGFAGui
+gui Font, s10
+gui add, text,vCHSNFLDR_STRING,% "Please drag and drop the folder you want to use on this window.`n`nChosen folder:"
 
 try {
     LastRunCount:=false
@@ -92,34 +92,34 @@ try {
     ttip(e)
 }
 if (LastRunCount) {
-    gui, add, Edit, w400 h110 vFolder disabled, % script.config.LastRun.Folder
+    gui add, Edit, w400 h110 vFolder disabled, % script.config.LastRun.Folder
 } else {
-    gui, add, Edit, w400 h110 vFolder disabled,
+    gui add, Edit, w400 h110 vFolder disabled,
 }
-gui, add, text,, % "Enter Group names, delimited by a comma ','."
-gui, add, edit, vNames w200, % script.config.LastRun.Names
-gui, add, text,, % "Please set the number of pots/plants per group.`nValue must be an integer."
-gui, add, edit, vPlantsPerGroup w200 Number, % script.config.LastRun.PlantsPerGroup
+gui add, text,, % "Enter Group names, delimited by a comma ','."
+gui add, edit, vNames w200, % script.config.LastRun.Names
+gui add, text,, % "Please set the number of pots/plants per group.`nValue must be an integer."
+gui add, edit, vPlantsPerGroup w200 Number, % script.config.LastRun.PlantsPerGroup
 ;gui, add, text,vvUsedStick, % "used Stick: " (device_name!=""? "'" device_name "'": "Device '" script.config.config.USB_Stick_Name "' could not be found.")
-gui, add, Button, vSubmitButton disabled gGFARSubmit, &Submit
-gui, add, Button, yp xp+64 gGFARHelp, &Help
-gui, add, Button, yp xp+51 gGFARAbout, &About
+gui add, Button, vSubmitButton disabled gGFARSubmit, &Submit
+gui add, Button, yp xp+64 gGFARHelp, &Help
+gui add, Button, yp xp+51 gGFARAbout, &About
 onOpenConfig:=Func("GFARopenConfig").Bind(script.configfile)
-gui, add, button, hwndOpenConfig yp xp+58, &Config
-GuiControl, +g,%OpenConfig%, % onOpenConfig
+gui add, button, hwndOpenConfig yp xp+58, &Config
+GuiControl +g,%OpenConfig%, % onOpenConfig
 ; if !(A_IsCompiled) {
-gui, add, button, hwndSetTestset yp xp+60, % "Set Testset"
+gui add, button, hwndSetTestset yp xp+60, % "Set Testset"
 onSetTestset:=Func("setTestset").Bind(A_ScriptDir "\assets\Image Test Files",script.config.Testset.Names,script.config.Testset.PlantsPerGroup)
-guicontrol, +g, %SetTestset%, % onSetTestset
+guicontrol +g, %SetTestset%, % onSetTestset
 ; }
-gui, font, s7
-gui, add, text,yp+20 x350,% "v." script.version " by ~Gw"
-gui, GFAR: show, w430 x%xP% y%yP% ,% "Drop folder with images on this window"
+gui font, s7
+gui add, text,yp+20 x350,% "v." script.version " by ~Gw"
+gui GFAR: show, w430 x%xP% y%yP% ,% "Drop folder with images on this window"
 return
 #if Winactive("ahk_id " GFAGui) ;; make the following hotkey only trigger when the specific GUI has keyboard-focus.
-    Esc::GFAREscape()
+Esc::GFAREscape()
 #if Winactive("ahk_id " GFAR_ExcludeGui) ;; make the following hotkey only trigger when the specific GUI has keyboard-focus.
-    Esc::GFAR_ExcludeEscape()
+Esc::GFAR_ExcludeEscape()
 #if ;; end the hotkey-conditions
 
 ;; Set the settings for the test-set files in the program's own directory.
@@ -130,7 +130,7 @@ GFARGuiDropFiles(GuiHwnd, FileArray, CtrlHwnd, X, Y) {
     for i, file in FileArray {
         guicontrol,, Folder, % file
         if CountFilesR(file,i) {
-            guicontrol,GFAR: enable, SubmitButton
+            guicontrol GFAR: enable, SubmitButton
         }
     }
     return
@@ -140,14 +140,14 @@ GFARAbout() {
     return
 }
 GFARHelp() {
-    run, % script.offdoclink
+    run % script.offdoclink
     return
 }
 GFARopenConfig(configfile) {
     static
-    gui, Submit, NoHide
-    RunWait, % configfile,,,PID
-    WinWaitClose, % "ahk_PID" PID
+    gui Submit, NoHide
+    RunWait % configfile,,,PID
+    WinWaitClose % "ahk_PID" PID
     Gui +OwnDialogs
     OnMessage(0x44, "GFARopenConfig_OnMsgBox")
     MsgBox 0x40044, % script.name " > " A_ThisFunc "()", You modified the configuration for this script.`nReload?
@@ -160,8 +160,8 @@ GFARopenConfig(configfile) {
     return
 }
 GFARopenConfig_OnMsgBox() {
-    DetectHiddenWindows, On
-    Process, Exist
+    DetectHiddenWindows On
+    Process Exist
     If (WinExist("ahk_class #32770 ahk_pid " . ErrorLevel)) {
         ControlSetText Button1, Reload
         ControlSetText Button2, Continue
@@ -169,13 +169,13 @@ GFARopenConfig_OnMsgBox() {
 }
 
 GFAREscape() {
-    gui, GFAR: destroy
+    gui GFAR: destroy
     exitApp()
     return
 }
 GFARSubmit() {
     global
-    gui, GFAR: Submit, NoHide
+    gui GFAR: Submit, NoHide
     if (Names="") {
         ttip("Please provide the number of pots/plants per group.")
     }
@@ -227,42 +227,42 @@ GFARSubmit() {
     until you have them all line up again.
     */
     if (ImagePaths.Count() > Arr.Count()) {
-        msgbox, % "Critical error: you have more images than names available"
+        msgbox % "Critical error: you have more images than names available"
     }
-    gui, GFAR_Exclude: new, +AlwaysOnTop -SysMenu -ToolWindow -caption +Border +hwndGFAR_ExcludeGui
-    gui, GFAR_Exclude: +OwnerGFAR
-    gui, GFAR: +disabled
-    gui, Font, s10
-    gui, add, text,,% "Please UNTICK any name you do not have an image for (at that position).`nNotes:`n - Files are not actually skipped. Instead, by unticking a row you prevent the name of a pot that you don't have an image`nof from being applied to the 'next-in-line' image.)`n - Double-click an entry in this list to view the image`n - Select an image and press F2 if you want to change the name it will be assigned (and you know what you are doing.)"
-    gui, add, Listview, Checked vvLV_SelectedEntries w700 R30 -ReadOnly WantF2 Report gGFAR_ExcludeInspectSelection, Name | Expected Filepath
+    gui GFAR_Exclude: new, +AlwaysOnTop -SysMenu -ToolWindow -caption +Border +hwndGFAR_ExcludeGui
+    gui GFAR_Exclude: +OwnerGFAR
+    gui GFAR: +disabled
+    gui Font, s10
+    gui add, text,,% "Please UNTICK any name you do not have an image for (at that position).`nNotes:`n - Files are not actually skipped. Instead, by unticking a row you prevent the name of a pot that you don't have an image`nof from being applied to the 'next-in-line' image.)`n - Double-click an entry in this list to view the image`n - Select an image and press F2 if you want to change the name it will be assigned (and you know what you are doing.)"
+    gui add, Listview, Checked vvLV_SelectedEntries w700 R30 -ReadOnly WantF2 Report gGFAR_ExcludeInspectSelection, Name | Expected Filepath
     ;Arr2:=ForceOrder(Arr)
     ImagePaths2:=ForceOrder(ImagePaths)
     ;Clipboard:= "OLD:`n" StringifyObject(Arr) "`n---`n" StringifyObject(ImagePaths) "`n---`n" "`n---`nNEW:`n" StringifyObject(Arr2) "`n---`n" StringifyObject(ImagePaths2)
     f_UpdateLV(Arr,ImagePaths2)
-    gui, add, text,, % "Images/Names: (" ImagePaths.Count() "/" Arr.Count() ")"
-    gui, add, Button, gGFAR_DuplicatetoShiftFrame vvGFAR_DuplicatetoShiftFrame disabled, &Duplicate to shift frame
-    gui, add, Button,yp xp+170 vvGFAR_ExcludeSubmitButton gGFAR_ExcludeSubmit, &Continue
+    gui add, text,, % "Images/Names: (" ImagePaths.Count() "/" Arr.Count() ")"
+    gui add, Button, gGFAR_DuplicatetoShiftFrame vvGFAR_DuplicatetoShiftFrame disabled, &Duplicate to shift frame
+    gui add, Button,yp xp+170 vvGFAR_ExcludeSubmitButton gGFAR_ExcludeSubmit, &Continue
 
     GFAR_LastImage:=Func("GFAR_ExcludeOpenPath").Bind(ImageF)
-    gui, add, Button, yp xp+80 hwndGFAR_ExcludeOpenLastImage,Open &Last image
-    GuiControl, +g, %GFAR_ExcludeOpenLastImage%, % GFAR_LastImage
+    gui add, Button, yp xp+80 hwndGFAR_ExcludeOpenLastImage,Open &Last image
+    GuiControl +g, %GFAR_ExcludeOpenLastImage%, % GFAR_LastImage
 
     GFAR_OpenFolder:=Func("GFAR_ExcludeOpenPath").Bind(Folder)
     GFAR_OpenSelectedImage:=Func("GFAR_ExcludeInspectSelection").Bind(Folder)
-    gui, add, Button, yp xp+130 hwndGFAR_ExcludeOpenFolder,Open &Folder
-    gui, add, Button, yp xp+130 hwndGFAR_ExcludeInspect, Open &Selected Image
-    GuiControl, +g, %GFAR_ExcludeOpenFolder%, % GFAR_OpenFolder
-    GuiControl, +g, %GFAR_ExcludeInspect%, % GFAR_OpenSelectedImage
+    gui add, Button, yp xp+130 hwndGFAR_ExcludeOpenFolder,Open &Folder
+    gui add, Button, yp xp+130 hwndGFAR_ExcludeInspect, Open &Selected Image
+    GuiControl +g, %GFAR_ExcludeOpenFolder%, % GFAR_OpenFolder
+    GuiControl +g, %GFAR_ExcludeInspect%, % GFAR_OpenSelectedImage
     ;gui, add, Button, yp xp+80 gGFAR_ExcludeAbort
     if (ImagePaths.Count()<Arr.Count()) {
-        guicontrol, GFAR_Exclude: Disable,vGFAR_ExcludeSubmitButton
-        guicontrol, GFAR_Exclude: Enable,vGFAR_DuplicatetoShiftFrame
+        guicontrol GFAR_Exclude: Disable,vGFAR_ExcludeSubmitButton
+        guicontrol GFAR_Exclude: Enable,vGFAR_DuplicatetoShiftFrame
     } else {
-        guicontrol, GFAR_Exclude: Enable,vGFAR_ExcludeSubmitButton
-        guicontrol, GFAR_Exclude: Disable,vGFAR_DuplicatetoShiftFrame
+        guicontrol GFAR_Exclude: Enable,vGFAR_ExcludeSubmitButton
+        guicontrol GFAR_Exclude: Disable,vGFAR_DuplicatetoShiftFrame
     }
-    gui, GFAR_Exclude: show, AutoSize,% "Exclude Names"
-    WinWaitClose, % "Exclude Names"
+    gui GFAR_Exclude: show, AutoSize,% "Exclude Names"
+    WinWaitClose % "Exclude Names"
     return
 }
 
@@ -280,7 +280,7 @@ GFAR_DuplicatetoShiftFrame() {
         InspectedImage:=Folder Delim sel2[3] "." script.config.Config.filetype
         Padding_Name:=Folder Delim sel2[3] " (padding)." script.config.Config.filetype
     }
-    FileCopy, % InspectedImage,% Padding_Name, 0
+    FileCopy % InspectedImage,% Padding_Name, 0
 
     ;; Arr
     ;; ImagePaths
@@ -289,10 +289,10 @@ GFAR_DuplicatetoShiftFrame() {
     LV_Insert(Position_Duplicate, "Check", sel2[2] " (blank)", sel2[3] " (padding)")
     SourceImagesToDelete.push(Position_Duplicate) ; todo:: this does not work for mapping which files are padded and which are not. (just delete all files containing '(padding)' instead?)
     if (ImagePaths.Count()=Arr.Count()) {
-        guicontrol, GFAR_Exclude: enable,vGFAR_ExcludeSubmitButton
+        guicontrol GFAR_Exclude: enable,vGFAR_ExcludeSubmitButton
     } else {
         GFAR_ExcludeEscape()
-        sleep, 200
+        sleep 200
         GFARSubmit()
     }
     return SourceImagesToDelete
@@ -302,17 +302,17 @@ f_UpdateLV(Array,Array2) {
     ; updates the selected LV. LV MUST BE SELECTED BEFORE.
     LV_Delete()
     for k,v in Array {
-        SplitPath, % Array2[k], ,,, OutNameNoExt
+        SplitPath % Array2[k], ,,, OutNameNoExt
         LV_Add("Check",v,OutNameNoExt)
     }
     LV_ModifyCol(1,"auto")
     return
 }
 GFAR_ExcludeOpenPath(Path) {
-    gui, GFAR_Exclude: -AlwaysOnTop
+    gui GFAR_Exclude: -AlwaysOnTop
 
-    Run, % Path, , , vPID
-    gui, GFAR_Exclude: +AlwaysOnTop
+    Run % Path, , , vPID
+    gui GFAR_Exclude: +AlwaysOnTop
 
     return
 }
@@ -329,23 +329,23 @@ GFAR_ExcludeInspectSelection() {
         InspectedImage:=Folder Delim sel2[3] "." script.config.Config.filetype
     }
     if (FileExist(InspectedImage) && A_GuiEvent!="e") {
-        run, % InspectedImage
+        run % InspectedImage
     }
     return
 }
 
 GFAR_ExcludeEscape() {
-    gui, GFAR: -disabled
-    gui, GFAR_Exclude: destroy
+    gui GFAR: -disabled
+    gui GFAR_Exclude: destroy
     ;MsgBox 0x40034, % script.name " - Confirm", % "No changes occured. Return to first GUI"
     return
 }
 GFAR_ExcludeSubmit() {
     global
-    gui, GFAR: -disabled
+    gui GFAR: -disabled
 
     Sel:=f_GetCheckedLVEntries() ;; retrieve all rows of the Listview that we have checked/not unchecked
-    gui, GFAR_Exclude: Submit ;; submit the GUI to get all data inputted into it formally.
+    gui GFAR_Exclude: Submit ;; submit the GUI to get all data inputted into it formally.
 
     Count_CopiedImages:=0 ;; if duplicates are excluded or padding files exist, we want less files in the output than in the Working Directory.
 
@@ -384,7 +384,7 @@ GFAR_ExcludeSubmit() {
             Delim:=(SubStr(Folder, -1 )!="\"?"\":"")
             RenamedImage:=Folder Delim Sel_Arr[3] "." script.config.Config.filetype
             if InStr(Sel_Arr[3],"(padding)") { ;; remove padding files and advance to next iteration
-                FileDelete, % RenamedImage
+                FileDelete % RenamedImage
                 continue
             }
             scriptWorkingDir:=renameFile(RenamedImage,Sel_Arr[2],true,Sel_Index,Sel.Count())
@@ -407,7 +407,7 @@ GFAR_ExcludeSubmit() {
             return
         }
         Else {
-            run, % scriptWorkingDir
+            run % scriptWorkingDir
         }
     }
     ttip(script.name " - Finished running")
@@ -457,7 +457,7 @@ f_GetCheckedLVEntries() {
 writeFile(Path,Content,Encoding:="",Flags:=0x2,bSafeOverwrite:=false) {
 
     if (bSafeOverwrite && FileExist(Path)) ;; if we want to ensure nonexistance.
-        FileDelete, % Path
+        FileDelete % Path
     if (Encoding!="")
     {
         if (fObj:=FileOpen(Path,Flags,Encoding))
@@ -482,11 +482,11 @@ writeFile(Path,Content,Encoding:="",Flags:=0x2,bSafeOverwrite:=false) {
 }
 renameFile(Path,Name,Backup:=true,CurrentIndex:="",TotalCount:="") {
     static HasBackuped:=false
-    SplitPath, % Path, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
+    SplitPath % Path, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
     if !Instr(FileExist(scriptWorkingDir:=OutDir "\" "GFAR_WD"),"D")
-        FileCreateDir, % scriptWorkingDir
+        FileCreateDir % scriptWorkingDir
     ttip(["Renaming (" CurrentIndex "/" TotalCount ")",[Path,Name]])
-    FileCopy, % Path, % scriptWorkingDir "\" Name "." OutExtension
+    FileCopy % Path, % scriptWorkingDir "\" Name "." OutExtension
     return scriptWorkingDir
 }
 
@@ -495,7 +495,7 @@ repeatIndex(repetitions) {
     lastreturn++
     if (lastreturn>repetitions)
         lastreturn:=1
-    OutputDebug, % lastreturn "`n"
+    OutputDebug % lastreturn "`n"
     return lastreturn
 }
 repeatElementIofarrayNKtimes(array:="",repetitions:="",bDebug:=true,resetCallIndex:=False,Names:="") {
@@ -540,20 +540,20 @@ exitApp() {
 }
 
 ;DN |N  |H
-#Include, <Base64PNG_to_HICON>
-#Include, <Cleanup>
-#Include, <ClipboardSetFiles>
-#Include, <CountFilesR>
-#Include, <ForceOrder>
-#Include, <Hash_File>
-#include, <ini>
-#Include, <MessageBoxes>
-#Include, <Object_HashmapHash>
-#Include, <script>
-#Include, <StdErr_Write>
-#Include, <StringifyObject>
-#Include, <TestDataset>
-#Include, <ttip>
-#Include, <setupdefaultconfig>
-#Include, <TraySetup>
+#Include <Base64PNG_to_HICON>
+#Include <Cleanup>
+#Include <ClipboardSetFiles>
+#Include <CountFilesR>
+#Include <ForceOrder>
+#Include <Hash_File>
+#include <ini>
+#Include <MessageBoxes>
+#Include <Object_HashmapHash>
+#Include <script>
+#Include <StdErr_Write>
+#Include <StringifyObject>
+#Include <TestDataset>
+#Include <ttip>
+#Include <setupdefaultconfig>
+#Include <TraySetup>
 

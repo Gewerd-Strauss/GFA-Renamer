@@ -1,22 +1,22 @@
 MsgBoxCallback() {
-    DetectHiddenWindows, On
-    Process, Exist
+    DetectHiddenWindows On
+    Process Exist
     If (WinExist("ahk_class #32770 ahk_pid " . ErrorLevel)) {
         ControlSetText Button1, Continue
     }
     return
 }
 MsgBoxCallback2() {
-    DetectHiddenWindows, On
-    Process, Exist
+    DetectHiddenWindows On
+    Process Exist
     If (WinExist("ahk_class #32770 ahk_pid " . ErrorLevel)) {
         ControlSetText Button1, Exit Script
     }
     return
 }
 MsgBoxCallback3() {
-    DetectHiddenWindows, On
-    Process, Exist
+    DetectHiddenWindows On
+    Process Exist
     If (WinExist("ahk_class #32770 ahk_pid " . ErrorLevel)) {
         ControlSetText Button1, OK
         ControlSetText Button2, Go to Github
@@ -100,19 +100,19 @@ MsgBoxEx(Text, Title := "", Buttons := "", Icon := "", ByRef CheckText := "", St
     MsgBoxExCLOSE:
     MsgBoxExTIMEOUT:
     MsgBoxExBUTTON:
-        SetTimer MsgBoxExTIMEOUT, Delete
+    SetTimer MsgBoxExTIMEOUT, Delete
 
-        If (A_ThisLabel == "MsgBoxExBUTTON") {
-            RetVal := StrReplace(A_GuiControl, "&")
-        } Else {
-            RetVal := (A_ThisLabel == "MsgBoxExTIMEOUT") ? "Timeout" : "Cancel"
-        }
+    If (A_ThisLabel == "MsgBoxExBUTTON") {
+        RetVal := StrReplace(A_GuiControl, "&")
+    } Else {
+        RetVal := (A_ThisLabel == "MsgBoxExTIMEOUT") ? "Timeout" : "Cancel"
+    }
 
-        If (Owner) {
-            WinSet Enable,, ahk_id %Owner%
-        }
+    If (Owner) {
+        WinSet Enable,, ahk_id %Owner%
+    }
 
-        Gui Submit
-        Gui %hWnd%: Destroy
+    Gui Submit
+    Gui %hWnd%: Destroy
     Return
 }

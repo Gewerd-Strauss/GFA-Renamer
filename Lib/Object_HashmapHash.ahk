@@ -1,8 +1,8 @@
 Object_HashmapHash(Key)
 {		;; thank you to u/anonymous1184 for writing this for me for an old project, certainly helped a lot here.
-    if FileExist(Key) {
-        FileRead, Key, % Key
-    }
+	if FileExist(Key) {
+		FileRead Key, % Key
+	}
 	if !StrLen(Key)
 		throw Exception("No key provided", -2)
 	if IsObject(Key)
