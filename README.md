@@ -1,67 +1,28 @@
-# GFA_Renamer: Utility for renaming consecutive image files based on a set of names
+# GFA_Renamer: Utility for renaming consecutive image files
 
 This  is a small utility script written for my internship. Simply drag a folder containing ordered image files onto the GUI and follow the Instructions.
 
 ## Getting started
 
-After downloading the script, run `setup.ahk` or `setup.exe` (depending on whether or not you have AutoHotkey)
+After downloading the script, run `GFA_Renamer.ahk` or `GFA_Renamer.exe` (depending on whether or not you have AutoHotkey as a local install.)  
+It is usually recommended to use non-compiled scripts because that allows you to actually modify them without issue, but performance-wise it makes basically no difference.
 
-## THE GUI
+## Documentation
 
-![GUI Overview](assets/Documentation/GFA_Renamer%20GUI%20Overview.jpg)
+Documentation regarding the installation and setup are in this readme-file, located on the repository's GH-page or within the `res`-subfolder.
+Documentation regarding how to use the utility are located under `assets/Documentation/GFA_Renamer.<docx/html/pdf>`.
 
+## Test Files
 
-Then enter the required group names and number of pots per group and confirm your choices. 
+Test Images are downloaded from [this gist](https://gist.github.com/Gewerd-Strauss/d944d8abc295253ced401493edd377f2). They will remain up for future downloads, but unless deleted they should only be downloaded once.
+Every time you load the Testset after moving the utility elsewhere, they will be downloaded to the utility's dierectory again.
+The size on-disk for the zipped source set is 166 MB.
 
-The image files in that folder will then be duplicated into a subfolder `GFAR_WD`, wherein they will be renamed according to the information provided.
+## Data access
 
-The script additionally provides a log file stating
-1. The number of expected files
-2. The number of renamed files, and
-3. For every file its original and new filename.
+Be aware that for obvious reasons I am not handling cleanup of the system trash bin for you; and I do not handle images outside of the script's access - which is limited to its own directory, as well as any folder you drop onto the GUI.
 
-The original files will never be altered directly as a precaution. It is the user's responsibility to decide to delete the original backup files.
+- For its own directory, the script handles cleanup post-execution.
 
-## How to deal with missing images / NEW
-
-## How to deal with missing images / DEPRECATED
-OUTDATED - WAIT FOR UPDATE
-In cases where a certain group has fewer images than the other - as could be the case if you loose a single pot at some point due to damage - simply copy the image of the previous pot and create a copy.
-
-Example:
-
-You have a group of plants which get watered at half the normal volume for 14 days, and every group has 7 pots.
-The pot G14D4 (14 Days at reduced water supply, then back up to normal) was removed because it got dropped a day before. 
-
-In this case, all groups have seven images, but the G14-Group only has six. Thus, imagine you have the following images to work with:
-
-
-| Number | Filename        | plant label                         |
-| ------ | --------------- | ----------------------------------- |
-| 1      | DSC10111.JPG        | `G14D1`                             |
-| 2      | DSC10112.JPG        | `G14D2`                             |
-| 3      | DSC10113.JPG        | `G14D3`                             |
-| 4      | DSC10114.JPG        | `G14D5`                             |
-| 5      | DSC10115.JPG        | `G14D6`                             |
-| 6      | DSC10116.JPG        | `G14D7`                             |
-
-In this example, `DSC10111-DSC10113` are `G14D1-G14D3`,and `DSC10114-DSC10116` are `G14D5-G14D7`. Thus, the image for `G14D5` is missing. If you just run the program, you would falsely rename all files beyond `DSC10113` because there would be a frame shift.  
-To prevent this, create a copy of `DSC10113` - it is important that you copy the image of the pot _immediately before the one that is missing_:
-
-| Number | Filename        | plant label                         |
-| ------ | --------------- | ----------------------------------- |
-| 1      | DSC10111.JPG        | `G14D1`                             |
-| 2      | DSC10112.JPG        | `G14D2`                             |
-| 3      | DSC10113.JPG        | `G14D3`                             |
-| 4      | DSC10113 - Copy.JPG | `Placeholder for the missing G14D4` |
-| 5      | DSC10114.JPG        | `G14D5`                             |
-| 6      | DSC10115.JPG        | `G14D6`                             |
-| 7      | DSC10116.JPG        | `G14D7`                             |
-
-
-Because the script will read images in the folder based on their name, this method ensures the gap is filled appropriately.
-
-This repository contains a sample set in the folder `assets\Image Test Files`. It contains the raw images, as well as the resulting output in the subfolder `GFAR_WD`.
-
-
-
+- In folders provided to the script by being dropped onto the GUI, the script will only interact with image files of the filetype you have set in the configuration - `.PNG` by default. Additionally, it will write a txt-log file to the working directory.  
+  - The working directory is a subfolder in the folder you drop onto the GUI, and will contain the renamed files and the log file.
