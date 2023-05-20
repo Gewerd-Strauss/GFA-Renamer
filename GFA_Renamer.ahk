@@ -40,7 +40,7 @@ script := {base : script.base
 currLicense:=Hash_File(A_ScriptDir "\res\LICENSE.txt","sha512")
 global bTestSet:=false
 global TEST_FOLDERPATH:=false
-F:=(FileExist(A_ScriptDir "\res\LICENSE.txt") && (currLicense==script.EL))
+F:=(FileExist(A_ScriptDir "\res\LICENSE.txt") && (currLicense!=""))
 if !F {
     OnMessage(0x44, "MsgBoxCallback3")
     MsgBox 0x11, script.name - Invalid or missing license, Please keep the expected license-file for this application in the resources-subfolder of the application's directory. The license is provided with the software at download`, or at this application's github repository.`n`nThe program will exit now.
