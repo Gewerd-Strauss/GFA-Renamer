@@ -68,7 +68,7 @@ TraySetup()
 script.update()
 OutputDebug % script.config.Count()
 if !script.config.Count() {
-    script.config:={"Config":{version:1.3.2},"LastRun":{Names:"",PlantsPerGroup:""}}
+    script.config:={"Config":{version:0},"LastRun":{Names:"",PlantsPerGroup:""}}
     OnMessage(0x44, "MsgBoxCallback")
     MsgBox 0x40, % script.name " - Initialisation",% "Initialised settings-file. `nThis will keep track of the last data you provided.`n`nThis config-file is located at`n`n'" A_ScriptDir "\res\" A_ScriptName ".ini'`n`nYou can now continue."
     OnMessage(0x44, "")
