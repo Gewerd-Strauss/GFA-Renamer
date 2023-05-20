@@ -4,7 +4,7 @@ setupdefaultconfig() {
         (LTrim
 
             [Config]
-            version= 1.1.2
+            version= 2.1.3
 
             ;; set the image filetype that the script considers. Note that you cannot choose multiple filetypes at once.
             filetype=jpg

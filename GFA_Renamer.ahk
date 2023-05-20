@@ -99,7 +99,7 @@ if (LastRunCount) {
 gui add, text,, % "Enter Group names, delimited by a comma ','."
 gui add, edit, vNames w200, % script.config.LastRun.Names
 gui add, text,, % "Please set the number of pots/plants per group.`nValue must be an integer."
-gui add, edit, vPlantsPerGroup w200 Number, % script.config.LastRun.PlantsPerGroup
+gui add, edit, vPlantsPerGroup w200, % script.config.LastRun.PlantsPerGroup
 ;gui, add, text,vvUsedStick, % "used Stick: " (device_name!=""? "'" device_name "'": "Device '" script.config.config.USB_Stick_Name "' could not be found.")
 gui add, Button, vSubmitButton disabled gGFARSubmit, &Submit
 gui add, Button, yp xp+64 gGFARHelp, &Help
@@ -190,15 +190,43 @@ GFARSubmit() {
     script.config.LastRun.Folder:=Folder
     script.config.LastRun.Names:=Names
     script.config.LastRun.PlantsPerGroup:=PlantsPerGroup
-    LoopCount:=PlantsPerGroup*strsplit(Names,",").Count()
-    loop % LoopCount
-    {
-        bReset:=(!(mod(A_Index,PlantsPerGroup))) ;; force a reset in call_index every 'PlantsPerGroup'
-        GroupName:=repeatElementIofarrayNKtimes(strsplit(Names,","),PlantsPerGroup,,bReset,Names)
-        Number:=repeatIndex(PlantsPerGroup)
-        Arr.push(GroupName " (" Number ")")
-        if (bReset) {
+    if (InStr(PlantsPerGroup,",")) { ;; we have designated group sizes
+        totalNumber:=0
+        Counts:=strsplit(PlantsPerGroup,",")
+        GroupNames:=strsplit(Names,",")
+        if (Counts.Count() != GroupNames.Count()) {
+            Gui +OwnDialogs
+            MsgBox 0x40010,% script.name " - Critical error: Parameters incompatible",% "You provided a list of varying number of pots/plants per group: `n" PlantsPerGroup "`n for " Counts.Count() " groups`, but also provided names for " GroupNames.Count() " groups:`n" Names "`n`nPlease fix this error by aligning both."
+            return
+        }
+        for each, Name in Groupnames {
+            loop, % Counts[each] {
+                Arr.push(Name " (" A_Index ")")
+            }
+        }
+        LoopCount:=PlantsPerGroup*strsplit(Names,",").Count()
+        loop % LoopCount
+        {
+            bReset:=(!(mod(A_Index,PlantsPerGroup))) ;; force a reset in call_index every 'PlantsPerGroup'
+            GroupName:=repeatElementIofarrayNKtimes(strsplit(Names,","),PlantsPerGroup,,bReset,Names)
+            Number:=repeatIndex(PlantsPerGroup)
+            Arr.push(GroupName " (" Number ")")
+            if (bReset) {
 
+            }
+        }
+    } else {
+
+        LoopCount:=PlantsPerGroup*strsplit(Names,",").Count()
+        loop % LoopCount
+        {
+            bReset:=(!(mod(A_Index,PlantsPerGroup))) ;; force a reset in call_index every 'PlantsPerGroup'
+            GroupName:=repeatElementIofarrayNKtimes(strsplit(Names,","),PlantsPerGroup,,bReset,Names)
+            Number:=repeatIndex(PlantsPerGroup)
+            Arr.push(GroupName " (" Number ")")
+            if (bReset) {
+
+            }
         }
     }
     ;ttip(repeatElementIofarrayNKtimes())
@@ -227,7 +255,10 @@ GFARSubmit() {
     until you have them all line up again.
     */
     if (ImagePaths.Count() > Arr.Count()) {
-        msgbox % "Critical error: you have more images than names available"
+        MsgBox 0x40010, % script.name " - Critical error: More images than names defined"
+            , % "The folder you provided contains " ImagePaths.Count() " images. The combination of the 'number of groups' and 'plants per group' you provided only allows for renaming " Arr.Count() " images."
+            . "`nBe aware that only those first " Arr.Count() " images will be renamed, (and copied to the clipboard)"
+        ImageF:=ImagePaths[Arr.Count()]
     }
     gui GFAR_Exclude: new, +AlwaysOnTop -SysMenu -ToolWindow -caption +Border +hwndGFAR_ExcludeGui
     gui GFAR_Exclude: +OwnerGFAR
@@ -359,6 +390,10 @@ GFAR_ExcludeSubmit() {
         Log:="Expected Number of images: " TrueNumberOfFiles "`nFound Number of images: " Sel.Count() "`n"
         LogBody:=""
         FilestoCopy:=""
+        if (TEST_FOLDERPATH!="") {
+            Folder:=TEST_FOLDERPATH
+        }
+        FileRecycle % Folder "\assets\Image Test Files\GFAR_WD"
         for Sel_Index,Sel_String in Sel ;; iterate over all entries that we left checked. These will be renamed based on the Entries of the Listview - the name displayed will be applied to the respectively displayed filename
         {
             if (TEST_FOLDERPATH!="") {
