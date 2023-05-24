@@ -1,11 +1,13 @@
-; --uID:4291014243
-; Metadata:
-; Snippet: Ini.ahk  ;  (v.2022.07.01.1)
+; #region:Ini.ahk (4291014243)
+
+; #region:Metadata:
+; Snippet: Ini.ahk;  (v.2022.07.01.1)
 ; --------------------------------------------------------------
-; Author: anonymous1184
+; Author: u/anonymous1184
 ; License: MIT
+; LicenseURL: https://gist.githubusercontent.com/anonymous1184/737749e83ade98c84cf619aabf66b063/raw/3a1abdd5c655705ee4557fff7c26fb4ca46ce650/LICENSE.txt
 ; Source: https://gist.github.com/anonymous1184/737749e83ade98c84cf619aabf66b063
-; (01.07.2022)
+; (24 Mai 2023)
 ; --------------------------------------------------------------
 ; Library: Personal Library
 ; Section: 23 - Other
@@ -13,11 +15,15 @@
 ; AHK_Version: v1
 ; --------------------------------------------------------------
 ; Keywords: config handling
+; #endregion:Metadata
 
-;; Description:
-;; https://gist.github.com/anonymous1184/737749e83ade98c84cf619aabf66b063
-;; https://www.reddit.com/r/AutoHotkey/comments/s1it4j/automagically_readwrite_configuration_files/
 
+; #region:Description:
+; https://gist.github.com/anonymous1184/737749e83ade98c84cf619aabf66b063
+; https://www.reddit.com/r/AutoHotkey/comments/s1it4j/automagically_readwrite_configuration_files/
+; #endregion:Description
+
+; #region:Code
 
 ; Version: 2022.11.08.1
 ; Usages and examples: https://redd.it/s1it4j
@@ -258,6 +264,34 @@ Ini_ToObject(ByRef Data) {
 }
 ;endregion
 
+; #endregion:Code
 
 
-; --uID:4291014243
+
+
+; #region:License
+; MIT License
+; 
+; Copyright (c) 2020 anonymous1184
+; 
+; Permission is hereby granted, free of charge, to any person obtaining a copy
+; of this software and associated documentation files (the "Software"), to deal
+; in the Software without restriction, including without limitation the rights
+; to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+; copies of the Software, and to permit persons to whom the Software is
+; furnished to do so, subject to the following conditions:
+; 
+; The above copyright notice and this permission notice shall be included in all
+; copies or substantial portions of the Software.
+; 
+; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+; SOFTWARE.
+; 
+; #endregion:License
+
+; #endregion:Ini.ahk (4291014243)

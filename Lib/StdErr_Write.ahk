@@ -40,8 +40,9 @@ StdErr_Write_(type, data, size) {
 
 ; License:
 
-; License could not be copied, please retrieve manually from 'https://www.autohotkey.com/board/topic/36032-lexikos-default-copyright-license/'
-; Warning: Dependency 'StdErr_Write_' may not be included. In that case, please search for it separately, or refer to the documentation.
-
+; This software is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any damages arising from the use of this software.
+; 
+; Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
+; [*:17p5ko30]The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 
 ; --uID:2565289504
