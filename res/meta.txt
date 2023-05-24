@@ -1,0 +1,12 @@
+author          - Gewerd Strauss
+email           - 
+ghtext          - GitHub-Repository
+GH-Author       - Gewerd-Strauss
+GH-Repo         - github.com/Gewerd-Strauss/GFA-Renamer
+doctext         - Documentation
+Documentation   - github.com/Gewerd-Strauss/GFA-Renamer#readme
+donatelink      - 
+homepage        - google.com
+forum           - google.com
+Issues          - github.com/Gewerd-Strauss/GFA-Renamer/issues
+About           - Utility script for batch-renaming image files of different test groups. For a usage manual, open the documentation under '%Program Directory%/assets/Documentation'
