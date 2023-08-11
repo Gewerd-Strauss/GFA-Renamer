@@ -17,6 +17,9 @@ setupdefaultconfig() {
             ;; This has no effect if you set 'PutFilesOnClipboard' to 0.
             CopyFiles=1
 
+            ;; Put the parent directory containing the resulting files on the clipboard instead
+            ;; This makes it easier to copy them to a stick because you do not need to create a folder for them first
+            CopyParentDirectory=1
             [TestSet]
 
             ; only edit this if you know what you are doing.

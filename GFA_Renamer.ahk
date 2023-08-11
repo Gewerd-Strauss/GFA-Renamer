@@ -430,6 +430,9 @@ GFAR_ExcludeSubmit() {
         Log.="Renamed Number of images: " Count_CopiedImages "`n"
         writeFile(logfile:=scriptWorkingDir "\__gfa_renamer_log.txt",Log LogBody, "UTF-8-RAW","w",true)
     }
+    if (script.config.Config.CopyParentDirectory) {
+        FilestoCopy:=scriptWorkingDir "`n"
+    }
     FilestoCopy.=logfile "`n"
     if (script.config.Config.PutFilesOnClipboard) {
         if (script.config.Config.CopyFiles)
