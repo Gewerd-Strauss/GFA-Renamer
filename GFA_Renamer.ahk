@@ -37,85 +37,91 @@ script := {base : script.base
         , Computername : A_ComputerName
         , license : A_ScriptDir "\res\LICENSE.txt" ;; do not edit the variables above if you don't know what you are doing.
         , blank : "" }
-currLicense:=Hash_File(A_ScriptDir "\res\LICENSE.txt","sha512")
-global bTestSet:=false
-global TEST_FOLDERPATH:=false
-F:=(FileExist(A_ScriptDir "\res\LICENSE.txt") && (currLicense!=""))
-if !F {
-    OnMessage(0x44, "MsgBoxCallback3")
-    MsgBox 0x11, script.name - Invalid or missing license, Please keep the expected license-file for this application in the resources-subfolder of the application's directory. The license is provided with the software at download`, or at this application's github repository.`n`nThe program will exit now.
-    OnMessage(0x44, "")
-    IfMsgBox OK, {
-        exitApp()
-    } Else IfMsgBox Cancel, {
-        run % script.ghlink
-        exitApp()
-    }
-}
-
-if !script.requiresInternet() {
-    exitApp()
-}
-if !FileExist(script.configfile) {
-    setupdefaultconfig()
-}
-script.config:=ini(script.configfile)
-script.version:=script.config.Config.Version
-script.loadCredits(script.resfolder "\credits.txt")
-script.loadMetadata(script.resfolder "\meta.txt")
-script.setIcon("iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAARISURBVGhD7dtLbxNXGMbxbFh2yRIpzkWQgpIUKFAVibCBknIJqCFOZNIbJg0Xp7ikkAAh4SJoCxUENiBgW6ktUldIKQURbmpAIkSiqlqg6gcAvsLLPPPKVjp5bM/xnAllMpb+K4/PeX9yjj1epGKmPpqcBmdAcLqPwcrKSol6cCo3BkczOJUbg6MZnMqNwdEMTuXG4GgGp3JjcDSDU7kG4OzvJ+TAs3NT6p04Kd1XB6TtbJc0fbZGaupq6etNqplX666VPNflrH1QesdP0b2/evAtfb03OJVrAext7x/fS9vwNlnwXiNdp1gLljXI5jNpdw22trdQwZnRI3TTQvX/NSwth1NSVVNF15tcorpKNgylZN+fp+lahfry7jG6njc4lWsAxp8W27RU237pk7kNdXRNNLe+TtJX9tHXlmr7yEG6pjc4lWsATl3aRTf1E96JhhWLp6xZv3yh9Nw+Sl/jp87LPVPWZMGpXANw89etdFO/ZcdOyPwl9fn18M6aHhNvH/a1/WfGQsGpXAPwwlVL6aYmdV89INW11e6ZTV/ZS68xadHqZXRWb3Aq1wCMMjcP041NWru/XdYPdNDnTMqMHpVEIkHn9Aancg3BH2Q30c1Nyj46Lnsef0OfM2lVz0Y6IwtO5RqCcUOQfXCcDuC39P1dkh4r/wMQZW4e8/V1lwtO5RqC0crPm+kQfup/Oizt1zZJ8teN0v/kLL3GTys+WU1nKxScyi0DjFIXd9JBSpWZOCRtI+vdMhMD9JpS4euRzVQsOJVbJhh/2uXciKTHdubBW8d20GuKhT3LuVeHU7llghG+R/E1wwYrVOetzjy4c/Rjek2h8ANlXuPbdJZSwancAGCEd3rL5QwdkNVxvTUP7vjN/41MytkjyK8wOJUbEJwLH2S4fWTDTi55rSUPTo600GsmhzVXbm2me5oEp3ItgRHuoNbs+Uh23yv8MzKHzbX/2TC9Dms097a6a7K9TINTuRbBuRJVCVmy7n3ZMJiST3/IundEvY9OSt/fZ6aA+5yfkHgO1+BavAavxRps7XKDU7khgIvlfSfZNWEEp3JjcLi9seCXdypea2ymYsGp3BjsLzbEdMZmKhacyg0AfnGjQv4Zchqcppy9nl9/jWD073dksJDCXrl92UzFglO5ZYJznR96Kz9E2GEvNoOf4FRuQPAX7bPpcGHUlZxNZ/ATnMoNCF7UOEee3+ID2u7dd+bQGfwEp3IDgtH4j7PogDZ7+NMsurff4HS1ziMw+MI0nOMg5xfBqVwL4O6O8M8xPivY3n6DU7kWwIudc8yGtFmQ84vgVK4FMArzHGNttqdJcLpa52EFfPFIeOcYnxFsT5PgVK4lcJjnGGuzPU2CU7mWwGGe46DnF8GpXEtgNP6z/XNs4/wiOF2t87AGDuMcY022l2lwKtci+P8cnMqNwdEMTuXG4GgGp3JjcDSDU7kz5j/TKppeAamEQurI/tgFAAAAAElFTkSuQmCC")
-TraySetup()
-script.update()
-OutputDebug % script.config.Count()
-if !script.config.Count() {
-    script.config:={"Config":{version:0},"LastRun":{Names:"",PlantsPerGroup:""}}
-    OnMessage(0x44, "MsgBoxCallback")
-    MsgBox 0x40, % script.name " - Initialisation",% "Initialised settings-file. `nThis will keep track of the last data you provided.`n`nThis config-file is located at`n`n'" A_ScriptDir "\res\" A_ScriptName ".ini'`n`nYou can now continue."
-    OnMessage(0x44, "")
-}
-OnExit("Cleanup")
-
-;; setup the GUI.
-yP:=A_ScreenHeight-500
-xP:=A_ScreenWidth-440
-gui GFAR: new, +AlwaysOnTop -SysMenu -ToolWindow -caption +Border +hwndGFAGui
-gui Font, s10
-gui add, text,vCHSNFLDR_STRING,% "Please drag and drop the folder you want to use on this window.`n`nChosen folder:"
-
-try {
-    LastRunCount:=false
-    if FileExist(script.config.LastRun.Folder) {
-        LastRunCount:=CountFiles(script.config.Lastrun.Folder)
-    }
-
-} catch e {
-    ttip(e)
-}
-if (LastRunCount) {
-    gui add, Edit, w400 h110 vFolder disabled, % script.config.LastRun.Folder
-} else {
-    gui add, Edit, w400 h110 vFolder disabled,
-}
-gui add, text,, % "Enter Group names, delimited by a comma ','."
-gui add, edit, vNames w200, % script.config.LastRun.Names
-gui add, text,, % "Please set the number of pots/plants per group.`nValue must be an integer."
-gui add, edit, vPlantsPerGroup w200, % script.config.LastRun.PlantsPerGroup
-;gui, add, text,vvUsedStick, % "used Stick: " (device_name!=""? "'" device_name "'": "Device '" script.config.config.USB_Stick_Name "' could not be found.")
-gui add, Button, vSubmitButton disabled gGFARSubmit, &Submit
-gui add, Button, yp xp+64 gGFARHelp, &Help
-gui add, Button, yp xp+51 gGFARAbout, &About
-onOpenConfig:=Func("GFARopenConfig").Bind(script.configfile)
-gui add, button, hwndOpenConfig yp xp+58, &Config
-GuiControl +g,%OpenConfig%, % onOpenConfig
-; if !(A_IsCompiled) {
-gui add, button, hwndSetTestset yp xp+60, % "Set Testset"
-onSetTestset:=Func("setTestset").Bind(A_ScriptDir "\assets\Image Test Files",script.config.Testset.Names,script.config.Testset.PlantsPerGroup)
-guicontrol +g, %SetTestset%, % onSetTestset
-; }
-gui font, s7
-gui add, text,yp+20 x350,% "v." script.version " by ~Gw"
-gui GFAR: show, w430 x%xP% y%yP% ,% "Drop folder with images on this window"
+main()
 return
+;; setup the GUI.
+main() {
+    global CHSNFLDR_STRING
+    global SubmitButton
+    currLicense:=Hash_File(A_ScriptDir "\res\LICENSE.txt","sha512")
+    global bTestSet:=false
+    global TEST_FOLDERPATH:=false
+    F:=(FileExist(A_ScriptDir "\res\LICENSE.txt") && (currLicense!=""))
+    if !F {
+        OnMessage(0x44, "MsgBoxCallback3")
+        MsgBox 0x11, script.name - Invalid or missing license, Please keep the expected license-file for this application in the resources-subfolder of the application's directory. The license is provided with the software at download`, or at this application's github repository.`n`nThe program will exit now.
+        OnMessage(0x44, "")
+        IfMsgBox OK, {
+            exitApp()
+        } Else IfMsgBox Cancel, {
+            run % script.ghlink
+            exitApp()
+        }
+    }
+
+    if !script.requiresInternet() {
+        exitApp()
+    }
+    if !FileExist(script.configfile) {
+        setupdefaultconfig()
+    }
+    script.config:=ini(script.configfile)
+    script.version:=script.config.Config.Version
+    script.loadCredits(script.resfolder "\credits.txt")
+    script.loadMetadata(script.resfolder "\meta.txt")
+    script.setIcon("iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAARISURBVGhD7dtLbxNXGMbxbFh2yRIpzkWQgpIUKFAVibCBknIJqCFOZNIbJg0Xp7ikkAAh4SJoCxUENiBgW6ktUldIKQURbmpAIkSiqlqg6gcAvsLLPPPKVjp5bM/xnAllMpb+K4/PeX9yjj1epGKmPpqcBmdAcLqPwcrKSol6cCo3BkczOJUbg6MZnMqNwdEMTuXG4GgGp3JjcDSDU7kG4OzvJ+TAs3NT6p04Kd1XB6TtbJc0fbZGaupq6etNqplX666VPNflrH1QesdP0b2/evAtfb03OJVrAext7x/fS9vwNlnwXiNdp1gLljXI5jNpdw22trdQwZnRI3TTQvX/NSwth1NSVVNF15tcorpKNgylZN+fp+lahfry7jG6njc4lWsAxp8W27RU237pk7kNdXRNNLe+TtJX9tHXlmr7yEG6pjc4lWsATl3aRTf1E96JhhWLp6xZv3yh9Nw+Sl/jp87LPVPWZMGpXANw89etdFO/ZcdOyPwl9fn18M6aHhNvH/a1/WfGQsGpXAPwwlVL6aYmdV89INW11e6ZTV/ZS68xadHqZXRWb3Aq1wCMMjcP041NWru/XdYPdNDnTMqMHpVEIkHn9Aancg3BH2Q30c1Nyj46Lnsef0OfM2lVz0Y6IwtO5RqCcUOQfXCcDuC39P1dkh4r/wMQZW4e8/V1lwtO5RqC0crPm+kQfup/Oizt1zZJ8teN0v/kLL3GTys+WU1nKxScyi0DjFIXd9JBSpWZOCRtI+vdMhMD9JpS4euRzVQsOJVbJhh/2uXciKTHdubBW8d20GuKhT3LuVeHU7llghG+R/E1wwYrVOetzjy4c/Rjek2h8ANlXuPbdJZSwancAGCEd3rL5QwdkNVxvTUP7vjN/41MytkjyK8wOJUbEJwLH2S4fWTDTi55rSUPTo600GsmhzVXbm2me5oEp3ItgRHuoNbs+Uh23yv8MzKHzbX/2TC9Dms097a6a7K9TINTuRbBuRJVCVmy7n3ZMJiST3/IundEvY9OSt/fZ6aA+5yfkHgO1+BavAavxRps7XKDU7khgIvlfSfZNWEEp3JjcLi9seCXdypea2ymYsGp3BjsLzbEdMZmKhacyg0AfnGjQv4Zchqcppy9nl9/jWD073dksJDCXrl92UzFglO5ZYJznR96Kz9E2GEvNoOf4FRuQPAX7bPpcGHUlZxNZ/ATnMoNCF7UOEee3+ID2u7dd+bQGfwEp3IDgtH4j7PogDZ7+NMsurff4HS1ziMw+MI0nOMg5xfBqVwL4O6O8M8xPivY3n6DU7kWwIudc8yGtFmQ84vgVK4FMArzHGNttqdJcLpa52EFfPFIeOcYnxFsT5PgVK4lcJjnGGuzPU2CU7mWwGGe46DnF8GpXEtgNP6z/XNs4/wiOF2t87AGDuMcY022l2lwKtci+P8cnMqNwdEMTuXG4GgGp3JjcDSDU7kz5j/TKppeAamEQurI/tgFAAAAAElFTkSuQmCC")
+    TraySetup()
+    script.update()
+    OutputDebug % script.config.Count()
+    if !script.config.Count() {
+        script.config:={"Config":{version:0},"LastRun":{Names:"",PlantsPerGroup:""}}
+        OnMessage(0x44, "MsgBoxCallback")
+        MsgBox 0x40, % script.name " - Initialisation",% "Initialised settings-file. `nThis will keep track of the last data you provided.`n`nThis config-file is located at`n`n'" A_ScriptDir "\res\" A_ScriptName ".ini'`n`nYou can now continue."
+        OnMessage(0x44, "")
+    }
+    OnExit("Cleanup")
+
+    yP:=A_ScreenHeight-500
+    xP:=A_ScreenWidth-440
+    gui GFAR: new, +AlwaysOnTop -SysMenu -ToolWindow -caption +Border +hwndGFAGui
+    gui Font, s10
+    gui add, text,vCHSNFLDR_STRING,% "Please drag and drop the folder you want to use on this window.`n`nChosen folder:"
+
+    try {
+        LastRunCount:=false
+        if FileExist(script.config.LastRun.Folder) {
+            LastRunCount:=CountFiles(script.config.Lastrun.Folder)
+        }
+
+    } catch e {
+        ttip(e)
+    }
+    if (LastRunCount) {
+        gui add, Edit, w400 h110 vFolder disabled, % script.config.LastRun.Folder
+    } else {
+        gui add, Edit, w400 h110 vFolder disabled,
+    }
+    gui add, text,, % "Enter Group names, delimited by a comma ','."
+    gui add, edit, vNames w200, % script.config.LastRun.Names
+    gui add, text,, % "Please set the number of pots/plants per group.`nValue must be an integer."
+    gui add, edit, vPlantsPerGroup w200, % script.config.LastRun.PlantsPerGroup
+    ;gui, add, text,vvUsedStick, % "used Stick: " (device_name!=""? "'" device_name "'": "Device '" script.config.config.USB_Stick_Name "' could not be found.")
+    gui add, Button, vSubmitButton disabled gGFARSubmit, &Submit
+    gui add, Button, yp xp+64 gGFARHelp, &Help
+    gui add, Button, yp xp+51 gGFARAbout, &About
+    onOpenConfig:=Func("GFARopenConfig").Bind(script.configfile)
+    gui add, button, hwndOpenConfig yp xp+58, &Config
+    GuiControl +g,%OpenConfig%, % onOpenConfig
+    ; if !(A_IsCompiled) {
+    gui add, button, hwndSetTestset yp xp+60, % "Set Testset"
+    onSetTestset:=Func("setTestset").Bind(A_ScriptDir "\assets\Image Test Files",script.config.Testset.Names,script.config.Testset.PlantsPerGroup)
+    guicontrol +g, %SetTestset%, % onSetTestset
+    ; }
+    gui font, s7
+    gui add, text,yp+20 x350,% "v." script.version " by ~Gw"
+    gui GFAR: show, w430 x%xP% y%yP% ,% "Drop folder with images on this window"
+    return
+}
 #if Winactive("ahk_id " GFAGui) ;; make the following hotkey only trigger when the specific GUI has keyboard-focus.
 Esc::GFAREscape()
 #if Winactive("ahk_id " GFAR_ExcludeGui) ;; make the following hotkey only trigger when the specific GUI has keyboard-focus.
