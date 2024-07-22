@@ -216,7 +216,7 @@ GFARSubmit() {
             bReset:=(!(mod(A_Index,PlantsPerGroup))) ;; force a reset in call_index every 'PlantsPerGroup'
             GroupName:=repeatElementIofarrayNKtimes(strsplit(Names,","),PlantsPerGroup,,bReset,Names)
             Number:=repeatIndex(PlantsPerGroup)
-            Arr.push(GroupName " (" Number ")")
+            Arr.push(GroupName script.config.Config.default_name_index_separator Number script.config.Config.default_name_index_suffix)
             if (bReset) {
 
             }
@@ -229,7 +229,7 @@ GFARSubmit() {
             bReset:=(!(mod(A_Index,PlantsPerGroup))) ;; force a reset in call_index every 'PlantsPerGroup'
             GroupName:=repeatElementIofarrayNKtimes(strsplit(Names,","),PlantsPerGroup,,bReset,Names)
             Number:=repeatIndex(PlantsPerGroup)
-            Arr.push(GroupName " (" Number ")")
+            Arr.push(GroupName script.config.Config.default_name_index_seperator Number script.config.Config.default_name_index_suffix)
             if (bReset) {
 
             }
