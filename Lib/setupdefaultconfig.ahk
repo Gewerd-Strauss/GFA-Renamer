@@ -20,6 +20,13 @@ setupdefaultconfig() {
             ;; Put the parent directory containing the resulting files on the clipboard instead
             ;; This makes it easier to copy them to a stick because you do not need to create a folder for them first
             CopyParentDirectory=1
+
+            ;; Set up default prefix separating the name and index (0:1:PlantsPerGroup)
+            default_name_index_seperator=%A_space%(
+
+            ;; Set up default suffix after the index (0:1:PlantsPerGroup)
+            default_name_index_suffix=
+
             [TestSet]
 
             ; only edit this if you know what you are doing.
